@@ -1,7 +1,7 @@
-# SNAKE GAME
-## SAMPLE CODE
-```cpp
-int main() {
-  return 0;
-}
-```
+# Project Snake Game - Programming Technique
+
+## Members:
+* Nguyễn Hi Hữu
+* Huỳnh Đức Thiện
+* Ngô Phước Tài
+* Lê Anh Thư
