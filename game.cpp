@@ -186,21 +186,19 @@ void Menu() {
 		TextColor(14);
 
 		GotoXY(40, 8);
-		cout << "Do an Snake - Mon Ky thuat lap trinh - Lop 19CTT3" << endl;
+		cout << "Do an game Snake - Mon Ky thuat lap trinh - Lop 21CLC07" << endl;
 		GotoXY(50, 9);
 		cout << "GVHD: Thay Truong Toan Thinh" << endl;
 		GotoXY(60, 11);
 		cout << "Nhom 2" << endl;
 		GotoXY(50, 12);
-		cout << "18120586 - Ho Hoang Thuong" << endl;
+		cout << "21127294 - Nguyen Hi Huu" << endl;
 		GotoXY(50, 13);
-		cout << "18120609 - Ho Khac Minh Tri" << endl;
+		cout << "21127419 - Ngo Phuoc Tai" << endl;
 		GotoXY(50, 14);
-		cout << "18120598 - Huynh Gia Toai" << endl;
+		cout << "21127175 - Le Anh Thu" << endl;
 		GotoXY(50, 15);
-		cout << "18120322 - Luu Thien Duc" << endl;
-		GotoXY(50, 16);
-		cout << "18120316 - Pham Ngoc Diep" << endl;
+		cout << "21127693 - Huynh Duc Thien" << endl;
 
 
 		cout << endl;
