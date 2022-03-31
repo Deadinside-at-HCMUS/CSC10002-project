@@ -58,3 +58,14 @@ void resizeConsole(int width, int height) {
 	GetWindowRect(console, &r);
 	MoveWindow(console, r.left, r.top, width, height, TRUE);
 }
+
+// exit game
+void ExitGame(HANDLE t) {
+	system("cls");
+	TerminateThread(t, 0);
+}
+
+// pause game
+void PauseGame(HANDLE t) {
+	SuspendThread(t);
+}

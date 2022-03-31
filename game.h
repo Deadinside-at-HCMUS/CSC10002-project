@@ -7,7 +7,7 @@
 #define MAX_LENGTH 20
 
 // game function
-void GameLoad();
+void GameSetup();
 
 
 

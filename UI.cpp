@@ -331,6 +331,7 @@ POSITION InputPlayMenu() {
 void InfoBoard(int x, int y) {
 	DrawBlank(x, y, INFO_BOARD_LENGTH, INFO_BOARD_WIDTH);
 	GotoXY(x, y);
+	TextColorWithBackground(PURPLE, WHITE);
 	for (int i = 0; i < INFO_BOARD_LENGTH + 2; ++i) {
 		cout << static_cast<char>(220);
 		Sleep(10);
@@ -340,7 +341,7 @@ void InfoBoard(int x, int y) {
 		cout << static_cast<char>(219);
 		Sleep(10);
 	}
-	for (int i = x + INFO_BOARD_LENGTH + 2; i >= x - 1; --i) {
+	for (int i = x + INFO_BOARD_LENGTH; i >= x - 1; --i) {
 		GotoXY(x + i, y + INFO_BOARD_WIDTH);
 		cout << static_cast<char>(223);
 		Sleep(10);
