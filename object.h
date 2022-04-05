@@ -10,26 +10,23 @@ struct POSITION {
 };
 
 // snake
-struct PART {
-	POSITION part;
-	// int length;
-	// int speed;
-	// int dir;
-	// PART *nextPart;
-
-};
 struct SNAKE {
-	PART *body;
+	POSITION head;
+	POSITION *part;
 	int size;
 };
 
 
 // obstacle
+struct OBSTACLE {
+	POSITION *contain;
+};
 
 
 // support function
+void generatePart(SNAKE &snake);
 
-
+void generateFood(int foodnum, POSITION &food);
 
 
 #endif // OBJECT

@@ -1,16 +1,15 @@
-#include <iostream>
 #include "Init.h"
 
 using namespace std;
 
-void FixConsoleWindow() {
+void fixConsoleWindow() {
 	HWND consoleWindow = GetConsoleWindow();
 	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
 
-void GotoXY(int x, int y) {
+void gotoXY(int x, int y) {
 	COORD coord;
 	coord.X = x;
 	coord.Y = y;
@@ -18,14 +17,14 @@ void GotoXY(int x, int y) {
 }
 
 // text color with highlight background
-void TextColorWithBackground(int frontcolor, int backcolor) {
+void textColorWithBackground(int frontcolor, int backcolor) {
 	WORD wcolor = ((backcolor & 0x0F) << 4) + (frontcolor & 0x0F);;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wcolor);
 	return;
 }
 
 // change console color function
-void ChangeConsoleColor(int BackC) {
+void changeConsoleColor(int BackC) {
     WORD wColor = ((BackC & 0x0F) << 4);
     HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD coord = { 0, 0 };
@@ -60,12 +59,12 @@ void resizeConsole(int width, int height) {
 }
 
 // exit game
-void ExitGame(HANDLE t) {
-	system("cls");
-	TerminateThread(t, 0);
-}
+//void exitGame(HANDLE t) {
+//	system("cls");
+//	TerminateThread(t, 0);
+//}
 
 // pause game
-void PauseGame(HANDLE t) {
-	SuspendThread(t);
-}
+//void pauseGame(HANDLE t) {
+//	SuspendThread(t);
+//}

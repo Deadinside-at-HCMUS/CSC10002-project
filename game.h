@@ -7,8 +7,15 @@
 #define MAX_LENGTH 20
 
 // game function
-void GameSetup();
+void gameSetup();
 
+bool isValid(int x, int y);
 
+bool isValidGate();
+
+bool eatFood();
+
+// create game
+void newGame();
 
 #endif // GAME

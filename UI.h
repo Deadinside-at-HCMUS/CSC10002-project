@@ -7,6 +7,10 @@
 #define PLAY_SCREEN_WIDTH    22
 #define INFO_BOARD_LENGTH    23
 #define INFO_BOARD_WIDTH     22
+#define LEFT_SIDE_X          26
+#define RIGHT_SIDE_X         118
+#define TOP_SIDE_Y           5
+#define BOTTOM_SIDE_Y        27
 
 // color info
 #define BLACK			0
@@ -26,32 +30,32 @@
 #define YELLOW			14
 #define WHITE			15
 
-void DrawBoard(int x, int y, int length, int width, int color);
+void drawBoard(int x, int y, int length, int width, int color);
 
-void DrawSmallLogo(int x, int y);
+void drawSmallLogo(int x, int y);
 
-void DrawChoiceBox(int x, int y, int length, int width);
+void drawChoiceBox(int x, int y, int length, int width);
 
-POSITION InputMainMenu();
+POSITION inputMainMenu();
 
-void Loading();
+void loading();
 
-void MainMenu();
+void mainMenu();
 
-POSITION InputMainMenu();
+POSITION inputMainMenu();
 
-void PlayMenu();
+void playMenu();
 
-POSITION InputPlayMenu();
+POSITION inputPlayMenu();
 
-void InputMenuBoxEffect(POSITION choice, int color);
+void inputMenuBoxEffect(POSITION choice, int color);
 
-void InputPlayBoxEffect(POSITION choice, int color);
+void inputPlayBoxEffect(POSITION choice, int color);
 
-void InfoBoard(int x, int y);
+void infoBoard(int x, int y);
 
-void GameTurtorial();
+void gameTurtorial();
 
-void AboutUs();
+void aboutUs();
 
 #endif // UI

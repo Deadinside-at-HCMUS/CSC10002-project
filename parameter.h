@@ -8,13 +8,13 @@
 #define LEFT_ARROW 75
 #define RIGHT_ARROW 77
 
-void FixConsoleWindow();
+void fixConsoleWindow();
 
-void GotoXY(int x, int y);
+void gotoXY(int x, int y);
 
-void ChangeConsoleColor(int BackC);
+void changeConsoleColor(int BackC);
 
-void TextColorWithBackground(int frontcolor, int backcolor);
+void textColorWithBackground(int frontcolor, int backcolor);
 
 void noCursorType();
 

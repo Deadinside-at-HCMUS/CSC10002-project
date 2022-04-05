@@ -1,37 +1,41 @@
-#include <iostream>
 #include "Init.h"
 using namespace std;
 
 int main() {
-	//ham khoi chay game
-	GameSetup();
+	fixConsoleWindow();
+	noCursorType();
+	changeConsoleColor(WHITE);
+	loading();
 	while (true) {
-		MainMenu();
-		POSITION choice = InputMainMenu();
+		mainMenu();
+		POSITION choice = inputMainMenu();
 		if (choice.x == 0 && choice.y == 0) {
 			system("cls");
-			PlayMenu();
-			POSITION sub_choice = InputPlayMenu();
+			playMenu();
+			POSITION sub_choice = inputPlayMenu();
 			if (sub_choice.y == 0) {
-				InfoBoard(1, 5);
+				infoBoard(1, 5);
+				newGame();
 
 			} else if (sub_choice.y == 1) {
-				InfoBoard(1, 5);
-
+				infoBoard(1, 5);
+				gotoXY(1, 1);
+				cout << "hi hi";
+				system("pause");
 			} else {
-				InfoBoard(1, 5);
-
+				infoBoard(1, 5);
+				gotoXY(1, 1);
+				cout << "hi hi";
+				system("pause");
 			}
 		}
 		else if (choice.x == 1 && choice.y == 0) {
-			GameTurtorial();
-			system("pause");
-
+			gameTurtorial();
+			// _getch();
 		}
 		else if (choice.x == 0 && choice.y == 1) {
-			AboutUs();
-			system("pause");
-
+			aboutUs();
+			// _getch();
 		}
 		else {
 			break;
