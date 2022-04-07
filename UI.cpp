@@ -353,7 +353,7 @@ void infoBoard(int x, int y) {
 		cout << static_cast<char>(219);
 		Sleep(10);
 	}
-
+	textColorWithBackground(DARK_YELLOW, WHITE);
 	gotoXY(3, 7);
 	cout << "Stage: ";
 
@@ -417,4 +417,34 @@ void aboutUs() {
 	gotoXY(45, 15);
 	cout << "21127693 - Huynh Duc Thien" << endl;
 
+}
+
+void drawGate(int type, int x, int y) {
+	switch (type) {
+		case 1: 
+			gotoXY(x, y);
+			textColorWithBackground(DARK_GREEN, BLACK);
+			cout << char(219) << char(223) << char(223) << char(219);
+			gotoXY(x, y + 1);
+			textColorWithBackground(DARK_GREEN, WHITE);
+			cout << char(223) << "  " << char(223);
+			break;
+		case 2:
+			gotoXY(x, y);
+			textColorWithBackground(DARK_GREEN, WHITE);
+			cout << char(220) << char(220);
+			gotoXY(x, y + 1);
+			textColorWithBackground(DARK_GREEN, BLACK);
+			cout << char(219) << ' ';
+			gotoXY(x, y + 2);
+			textColorWithBackground(DARK_GREEN, WHITE);
+			cout << char(223) << char(223);
+			break;
+		default:
+			break;
+	}
+}
+
+void gameOverSign() {
+	
 }

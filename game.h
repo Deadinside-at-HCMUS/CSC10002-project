@@ -16,6 +16,8 @@ bool isValidGate();
 bool eatFood();
 
 // create game
-void newGame();
+void newClassicGame();
+
+void newInfiniteGame();
 
 #endif // GAME

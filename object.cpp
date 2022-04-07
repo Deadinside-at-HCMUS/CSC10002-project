@@ -20,20 +20,25 @@ void generateFood(int foodnum, POSITION &food) {
 }
 
 // obstacle
+// int obsLen(POSITION *arr) {
+// 	int len = 0;
+// 	while (*arr++ != NULL) len++;
+// 	return len;
+// }
 void generateObstacle() {
 
 }
 
 //gate
-void generateGate() {
-	int x = 0, y = 0;
-	srand(time(NULL));
-	int type = rand() % 1;
-	if (type == 1) {
-		do {
-			x = rand() % (PLAY_SCREEN_LENGTH - 2)+ (LEFT_SIDE_X + 1);
-			y = rand() % (PLAY_SCREEN_WIDTH - 2) + (TOP_SIDE_Y + 1);
-		} while (!isValidGate(x, y));
-	}
+// void generateGate() {
+// 	int x = 0, y = 0;
+// 	srand(time(NULL));
+// 	int type = rand() % 1;
+// 	if (type == 1) {
+// 		do {
+// 			x = rand() % (PLAY_SCREEN_LENGTH - 2)+ (LEFT_SIDE_X + 1);
+// 			y = rand() % (PLAY_SCREEN_WIDTH - 2) + (TOP_SIDE_Y + 1);
+// 		} while (!isValidGate(x, y));
+// 	}
 
-}
+// }
