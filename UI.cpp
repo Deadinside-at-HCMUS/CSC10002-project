@@ -353,9 +353,19 @@ void infoBoard(int x, int y) {
 		cout << static_cast<char>(219);
 		Sleep(10);
 	}
+
+}
+
+void infoSet(int type) {
 	textColorWithBackground(DARK_YELLOW, WHITE);
-	gotoXY(3, 7);
-	cout << "Stage: ";
+	if (type == 1) {
+		gotoXY(3, 7);
+		cout << "Stage: ";
+	}
+	if (type == 3) {
+		gotoXY(3, 7);
+		cout << "Speed: ";
+	}
 
 	gotoXY(3, 9);
 	cout << "Score: ";
@@ -366,9 +376,7 @@ void infoBoard(int x, int y) {
 	gotoXY(3, 13);
 	cout << "(x): Exit";
 
-
 }
-
 
 void gameTurtorial() {
 	system("cls");

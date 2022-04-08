@@ -17,6 +17,7 @@ int main() {
 			if (sub_choice.y == 0) {
 				// che do choi classic
 				infoBoard(1, 5);
+				infoSet(1);
 				newClassicGame();
 
 			} else if (sub_choice.y == 1) {
@@ -27,7 +28,10 @@ int main() {
 				system("pause");
 			} else {
 				//che do choi infinitie
-				infoBoard(1, 5);
+				drawBlank(1, 5, INFO_BOARD_LENGTH, INFO_BOARD_WIDTH);
+				textColorWithBackground(PURPLE, WHITE);
+				drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
+				infoSet(3);
 				newInfiniteGame();
 
 			}

@@ -30,11 +30,16 @@
 #define YELLOW			14
 #define WHITE			15
 
+// art function
 void drawBoard(int x, int y, int length, int width, int color);
 
 void drawSmallLogo(int x, int y);
 
 void drawChoiceBox(int x, int y, int length, int width);
+
+void drawBlank(int x, int y, int length, int width);
+
+// menu function
 
 POSITION inputMainMenu();
 
@@ -53,6 +58,8 @@ void inputMenuBoxEffect(POSITION choice, int color);
 void inputPlayBoxEffect(POSITION choice, int color);
 
 void infoBoard(int x, int y);
+
+void infoSet(int type);
 
 void gameTurtorial();
 
