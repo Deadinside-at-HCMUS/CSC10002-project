@@ -113,7 +113,7 @@ bool isValidFood(int x, int y) {
 			return false;
 		}
 	}
-	if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][1] != 0) return false;
+	if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][0] != 0) return false;
 	return true;
 }
 
