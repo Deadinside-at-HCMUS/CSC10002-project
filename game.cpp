@@ -22,6 +22,8 @@ void gameSetup() {
 	charlock = DOWN;
 	snake.part = new POSITION[100];
 	snake.head = {(RIGHT_SIDE_X + LEFT_SIDE_X) / 2, (BOTTOM_SIDE_Y + TOP_SIDE_Y) / 2};
+	snake.part[0].y = snake.head.y;
+	snake.part[0].x = snake.head.x + 1;
 	snake.size = 1;
 	food.x = rand() % (PLAY_SCREEN_LENGTH - 2)+ (LEFT_SIDE_X + 1);
 	food.y = rand() % (PLAY_SCREEN_WIDTH - 2) + (TOP_SIDE_Y + 1);
@@ -104,13 +106,14 @@ void swapSide() {
 }
 
 // checking for propriate location
-bool isValid(int x, int y) {
+bool isValidFood(int x, int y) {
 	if (snake.head.x == x && snake.head.y == y) return false;
 	for (int i = 0; i < snake.size; i++) {
 		if (snake.part[i].x == x && snake.part[i].y == y) {
 			return false;
 		}
 	}
+	if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][1] != 0) return false;
 	return true;
 }
 
@@ -125,8 +128,11 @@ void checkCollisionBoard(SNAKE snake) {
 	
 }
 
-void checkCollisionObstacles(SNAKE snake, POSITION *wall) {
-	
+void checkCollisionObstacles(SNAKE snake) {
+	if (map[snake.head.y - TOP_SIDE_Y][snake.head.x - LEFT_SIDE_X][0] == BLOCK
+	|| map[snake.head.y - TOP_SIDE_Y][snake.head.x - LEFT_SIDE_X][0] == UPPER_BLOCK
+	|| map[snake.head.y - TOP_SIDE_Y][snake.head.x - LEFT_SIDE_X][0] == BOTTOM_BLOCK)
+	gameover = true;
 }
 
 void checkSelfHitting(SNAKE snake) {
@@ -144,20 +150,31 @@ bool eatFood() {
 
 // snake print
 void clearTail() {
-	gotoXY(snake.head.x, snake.head.y);
-	textColorWithBackground(WHITE, WHITE);
-	gotoXY(snake.part[snake.size - 1].x, snake.part[snake.size - 1].y);
-	cout << " ";
+	if (map[snake.part[snake.size - 1].y - TOP_SIDE_Y][snake.part[snake.size - 1].x - LEFT_SIDE_X][0] != BUSH_LV1
+	 && map[snake.part[snake.size - 1].y - TOP_SIDE_Y][snake.part[snake.size - 1].x - LEFT_SIDE_X][0] != BUSH_LV2
+	 && map[snake.part[snake.size - 1].y - TOP_SIDE_Y][snake.part[snake.size - 1].x - LEFT_SIDE_X][0] != BUSH_LV3) {
+		textColorWithBackground(WHITE, WHITE);
+		gotoXY(snake.part[snake.size - 1].x, snake.part[snake.size - 1].y);
+		cout << " ";
+	}
 }
 
 void printSnake() {
-	gotoXY(snake.head.x, snake.head.y);
-	textColorWithBackground(DARK_RED, WHITE);
-	cout << stid[0];
+	if (map[snake.head.y - TOP_SIDE_Y][snake.head.x - LEFT_SIDE_X][0] != BUSH_LV1
+	 && map[snake.head.y - TOP_SIDE_Y][snake.head.x - LEFT_SIDE_X][0] != BUSH_LV2
+	 && map[snake.head.y - TOP_SIDE_Y][snake.head.x - LEFT_SIDE_X][0] != BUSH_LV3) {
+		gotoXY(snake.head.x, snake.head.y);
+		textColorWithBackground(DARK_RED, WHITE);
+		cout << stid[0];
+	}
 	textColorWithBackground(DARK_YELLOW, WHITE);
 	for (int i = 1; i < snake.size; i++) {
-		gotoXY(snake.part[i].x, snake.part[i].y);
-		cout << stid[i];
+		if (map[snake.part[i].y - TOP_SIDE_Y][snake.part[i].x - LEFT_SIDE_X][0] != BUSH_LV1
+		 && map[snake.part[i].y - TOP_SIDE_Y][snake.part[i].x - LEFT_SIDE_X][0] != BUSH_LV2
+		 && map[snake.part[i].y - TOP_SIDE_Y][snake.part[i].x - LEFT_SIDE_X][0] != BUSH_LV3) {
+			gotoXY(snake.part[i].x, snake.part[i].y);
+			cout << stid[i];
+		}
 	}
 
 }
@@ -568,7 +585,7 @@ void castMap5() {
 			map[i + 17][j + 80][1] = DARK_GREEN;
 		}
 	}
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 5; i++) {
 		map[18][i + 87][0] = BLOCK;
 		map[18][i + 87][1] = GREY;
 	}
@@ -647,6 +664,7 @@ void resetSpeed() {
 	else
 		cout << "MAX";
 }
+
 // create new game
 void newClassicGame() {
 	gameSetup();
@@ -660,6 +678,7 @@ void newClassicGame() {
 		moving();
 		if (snake.size > 1) checkSelfHitting(snake);
 		checkCollisionBoard(snake);
+		checkCollisionObstacles(snake);
 		if (eatFood() == true) {
 			score += 10;
 			resetScore();

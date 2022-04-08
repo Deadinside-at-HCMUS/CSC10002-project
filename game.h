@@ -9,7 +9,7 @@
 // game function
 void gameSetup();
 
-bool isValid(int x, int y);
+bool isValidFood(int x, int y);
 
 bool isValidGate();
 

@@ -14,7 +14,7 @@ void generateFood(int foodnum, POSITION &food) {
 		do {
 			x = rand() % (PLAY_SCREEN_LENGTH - 2)+ (LEFT_SIDE_X + 1);
 			y = rand() % (PLAY_SCREEN_WIDTH - 2) + (TOP_SIDE_Y + 1);
-		} while (isValid(x, y) == false);
+		} while (isValidFood(x, y) == false);
 	}
 	food = {x, y};
 }
