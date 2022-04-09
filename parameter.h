@@ -20,4 +20,6 @@ void noCursorType();
 
 void resizeConsole(int width, int height);
 
+void drawChar(int x, int y, int color, int character);
+
 #endif // PARAMETER

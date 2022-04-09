@@ -39,6 +39,10 @@ void drawChoiceBox(int x, int y, int length, int width);
 
 void drawBlank(int x, int y, int length, int width);
 
+void gameOverSign();
+
+void DeathEffect(SNAKE* snake);
+
 // menu function
 
 POSITION inputMainMenu();

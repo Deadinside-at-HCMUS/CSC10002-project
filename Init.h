@@ -7,8 +7,8 @@
 #include <Windows.h>
 #include <conio.h>
 #include <time.h>
-// #include <io.h>
-// #include <fcntl.h>
+#include <io.h>
+#include <fcntl.h>
 #include "object.h"
 #include "parameter.h"
 #include "game.h"

@@ -58,6 +58,13 @@ void resizeConsole(int width, int height) {
 	MoveWindow(console, r.left, r.top, width, height, TRUE);
 }
 
+void drawChar(int x, int y, int color, int character) {
+	gotoXY(x, y);
+	textColorWithBackground(color, WHITE);
+	cout << char(character);
+
+}
+
 // exit game
 //void exitGame(HANDLE t) {
 //	system("cls");

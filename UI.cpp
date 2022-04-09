@@ -427,6 +427,134 @@ void aboutUs() {
 
 }
 
+void DeathEffect(SNAKE* snake)
+{
+	for (int i = snake->size; i >= 0; i--) {
+		drawChar(snake->part[i].x, snake->part[i].y, DARK_YELLOW, ' ');
+		Sleep(60);
+	}
+	drawChar(snake->part[0].x, snake->part[0].y, DARK_RED, '*');
+	Sleep(120);
+	for (int i = 0; i < 7; i++) {
+		if (i == 0)
+		{
+			drawChar(snake->part[0].x, snake->part[0].y, DARK_RED, '#');
+			drawChar(snake->part[0].x - 1, snake->part[0].y, DARK_RED, '*');
+			drawChar(snake->part[0].x + 1, snake->part[0].y, DARK_RED, '*');
+			Sleep(120);
+		}
+		if (i == 1)
+		{
+			drawChar(snake->part[0].x, snake->part[0].y, DARK_RED, '@');
+			drawChar(snake->part[0].x - 1, snake->part[0].y, DARK_RED, '#');
+			drawChar(snake->part[0].x + 1, snake->part[0].y, DARK_RED, '#');
+			drawChar(snake->part[0].x, snake->part[0].y - 1, DARK_RED, '#');
+			drawChar(snake->part[0].x, snake->part[0].y + 1, DARK_RED, '#');
+			drawChar(snake->part[0].x - 1, snake->part[0].y - 1, DARK_RED, '*');
+			drawChar(snake->part[0].x + 1, snake->part[0].y - 1, DARK_RED, '*');
+			drawChar(snake->part[0].x - 1, snake->part[0].y + 1, DARK_RED, '*');
+			drawChar(snake->part[0].x + 1, snake->part[0].y + 1, DARK_RED, '*');
+			Sleep(120);
+		}
+		if (i == 2)
+		{
+			{
+				drawChar(snake->part[0].x, snake->part[0].y, DARK_RED, '@');
+				drawChar(snake->part[0].x - 1, snake->part[0].y, DARK_RED, '#');
+				drawChar(snake->part[0].x - 2, snake->part[0].y, DARK_RED, '#');
+				drawChar(snake->part[0].x - 3, snake->part[0].y, DARK_RED, '*');
+				drawChar(snake->part[0].x + 1, snake->part[0].y, DARK_RED, '#');
+				drawChar(snake->part[0].x + 2, snake->part[0].y, DARK_RED, '#');
+				drawChar(snake->part[0].x + 3, snake->part[0].y, DARK_RED, '*');
+				drawChar(snake->part[0].x, snake->part[0].y + 1, DARK_RED, '#');
+				drawChar(snake->part[0].x, snake->part[0].y + 2, DARK_RED, '#');
+				drawChar(snake->part[0].x, snake->part[0].y + 3, DARK_RED, '*');
+				drawChar(snake->part[0].x, snake->part[0].y - 1, DARK_RED, '#');
+				drawChar(snake->part[0].x, snake->part[0].y - 2, DARK_RED, '#');
+				drawChar(snake->part[0].x, snake->part[0].y - 3, DARK_RED, '*');
+				drawChar(snake->part[0].x - 1, snake->part[0].y - 1, DARK_RED, '#');
+				drawChar(snake->part[0].x - 2, snake->part[0].y - 1, DARK_RED, '*');
+				drawChar(snake->part[0].x - 3, snake->part[0].y - 1, DARK_RED, '*');
+				drawChar(snake->part[0].x + 1, snake->part[0].y - 1, DARK_RED, '#');
+				drawChar(snake->part[0].x + 2, snake->part[0].y - 1, DARK_RED, '*');
+				drawChar(snake->part[0].x + 3, snake->part[0].y - 1, DARK_RED, '*');
+				drawChar(snake->part[0].x - 1, snake->part[0].y - 2, DARK_RED, '#');
+				drawChar(snake->part[0].x - 2, snake->part[0].y - 2, DARK_RED, '*');
+				drawChar(snake->part[0].x + 1, snake->part[0].y - 2, DARK_RED, '#');
+				drawChar(snake->part[0].x + 2, snake->part[0].y - 2, DARK_RED, '*');
+				drawChar(snake->part[0].x - 1, snake->part[0].y + 1, DARK_RED, '#');
+				drawChar(snake->part[0].x - 2, snake->part[0].y + 1, DARK_RED, '*');
+				drawChar(snake->part[0].x - 3, snake->part[0].y + 1, DARK_RED, '*');
+				drawChar(snake->part[0].x + 1, snake->part[0].y + 1, DARK_RED, '#');
+				drawChar(snake->part[0].x + 2, snake->part[0].y + 1, DARK_RED, '*');
+				drawChar(snake->part[0].x + 3, snake->part[0].y + 1, DARK_RED, '*');
+				drawChar(snake->part[0].x - 1, snake->part[0].y + 2, DARK_RED, '#');
+				drawChar(snake->part[0].x - 2, snake->part[0].y + 2, DARK_RED, '*');
+				drawChar(snake->part[0].x + 1, snake->part[0].y + 2, DARK_RED, '#');
+				drawChar(snake->part[0].x + 2, snake->part[0].y + 2, DARK_RED, '*');
+			}
+			Sleep(120);
+		}
+		if (i == 3)
+		{
+			drawChar(snake->part[0].x, snake->part[0].y, DARK_YELLOW, ' ');
+			Sleep(120);
+		}
+		if (i == 4)
+		{
+			drawChar(snake->part[0].x - 1, snake->part[0].y, DARK_YELLOW, ' ');
+			drawChar(snake->part[0].x + 1, snake->part[0].y, DARK_YELLOW, ' ');
+			Sleep(120);
+		}
+		if (i == 5)
+		{
+			drawChar(snake->part[0].x, snake->part[0].y - 1, DARK_YELLOW, ' ');
+			drawChar(snake->part[0].x, snake->part[0].y + 1, DARK_YELLOW, ' ');
+			drawChar(snake->part[0].x - 1, snake->part[0].y - 1, DARK_YELLOW, ' ');
+			drawChar(snake->part[0].x + 1, snake->part[0].y - 1, DARK_YELLOW, ' ');
+			drawChar(snake->part[0].x - 1, snake->part[0].y + 1, DARK_YELLOW, ' ');
+			drawChar(snake->part[0].x + 1, snake->part[0].y + 1, DARK_YELLOW, ' ');
+			Sleep(120);
+		}
+		if (i == 6)
+		{
+			{
+				drawChar(snake->part[0].x - 2, snake->part[0].y, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 3, snake->part[0].y, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 2, snake->part[0].y, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 3, snake->part[0].y, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x, snake->part[0].y + 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x, snake->part[0].y + 3, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x, snake->part[0].y - 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x, snake->part[0].y - 3, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 2, snake->part[0].y - 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 3, snake->part[0].y - 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 2, snake->part[0].y - 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 3, snake->part[0].y - 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 1, snake->part[0].y - 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 2, snake->part[0].y - 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 1, snake->part[0].y - 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 2, snake->part[0].y - 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 2, snake->part[0].y + 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 3, snake->part[0].y + 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 2, snake->part[0].y + 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 3, snake->part[0].y + 1, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 1, snake->part[0].y + 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x - 2, snake->part[0].y + 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 1, snake->part[0].y + 2, DARK_YELLOW, ' ');
+				drawChar(snake->part[0].x + 2, snake->part[0].y + 2, DARK_YELLOW, ' ');
+			}
+			Sleep(120);
+		}
+	}
+}
+
 void gameOverSign() {
-	
+	textColorWithBackground(CYAN, WHITE);
+	gotoXY(55, 14);
+	wcout << L"░▒█▀▀█░█▀▀▄░█▀▄▀█░█▀▀░▒█▀▀▀█░▄░░░▄░█▀▀░█▀▀▄";
+	gotoXY(55, 15);
+	wcout << L"░▒█░▄▄░█▄▄█░█░▀░█░█▀▀░▒█░░▒█░░█▄█░░█▀▀░█▄▄▀";
+	gotoXY(55, 16);
+	wcout << L"░▒█▄▄▀░▀░░▀░▀░░▒▀░▀▀▀░▒█▄▄▄█░░░▀░░░▀▀▀░▀░▀▀";
 }

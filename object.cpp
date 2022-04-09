@@ -2,8 +2,8 @@
 using namespace std;
 
 // snake
-void generatePart(SNAKE &snake) {
-	snake.size++;	
+void generatePart(SNAKE *snake) {
+	snake->size++;	
 }
 
 // food
