@@ -16,7 +16,7 @@ int map[PLAY_SCREEN_WIDTH][PLAY_SCREEN_LENGTH][2] {};
 
 void gameSetup() {
 	srand(time(NULL));
-	score = 50;
+	score = 90;
 	gameover = false;
 	foodnum = 1;
 	charlock = DOWN;
@@ -103,6 +103,14 @@ void swapSide() {
 }
 
 // checking for propriate location
+bool isValidSpawn(int x, int y) {
+	if (x == snake.head.x && y == snake.head.y) return false;
+	for (int idx = 0; idx < snake.size; idx++) {
+		if (snake.part[idx].x == x && snake.part[idx].y == y) return false;
+	}
+	return true;
+}
+
 bool isValidFood(int x, int y) {
 	if (snake.head.x == x && snake.head.y == y) return false;
 	for (int i = 0; i < snake.size; i++) {
@@ -121,23 +129,27 @@ bool isValidGate(int x, int y, int type) {
 		case 0:
 			for (int i = 0; i < 4; i++) {
 				if (map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] != 0
-				|| map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] == TOP_SIDE_Y + 1) return false;
+				|| map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] == TOP_SIDE_Y + 1
+				|| !isValidSpawn(x - 1 + i, y - 1)) return false;
 				if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] != 0
 				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == LEFT_SIDE_X + 1
 				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == RIGHT_SIDE_X) return false;
 				if (map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] != 0
-				|| map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] == BOTTOM_SIDE_Y - 1) return false;
+				|| map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] == BOTTOM_SIDE_Y - 1
+				|| !isValidSpawn(x + i - 1, y + 1)) return false;
 			}
 			break;
 		case 1:
 			for (int i = 0; i < 3; i++) {
 				if (map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] != 0
-				|| map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] == TOP_SIDE_Y + 1) return false;
+				|| map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] == TOP_SIDE_Y + 1
+				|| !isValidSpawn(x - 1 + i, y - 1)) return false;
 				if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] != 0
 				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == LEFT_SIDE_X + 1
 				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == RIGHT_SIDE_X) return false;
 				if (map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] != 0
-				|| map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] == BOTTOM_SIDE_Y - 1) return false;
+				|| map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] == BOTTOM_SIDE_Y - 1
+				|| !isValidSpawn(x - 1 + i, y + 1)) return false;
 			}
 			break;
 		default: 
@@ -748,24 +760,36 @@ void desGate(int stage) {
 		case 2: 
 			drawDesGate(1, LEFT_SIDE_X + 2, TOP_SIDE_Y + 1);
 			snake.head = {LEFT_SIDE_X + 2, TOP_SIDE_Y + 2};
+			for (int i = 0; i < snake.size; i++) {
+				snake.part[i] = snake.head;
+			}
 			dir = DOWN;
 			charlock = UP;
 			break;
 		case 3:
 			drawDesGate(2, LEFT_SIDE_X + 1, TOP_SIDE_Y + 4);
 			snake.head = {LEFT_SIDE_X + 2, TOP_SIDE_Y + 4};
+			for (int i = 0; i < snake.size; i++) {
+				snake.part[i] = snake.head;
+			}
 			dir = RIGHT;
 			charlock = LEFT;
 			break;
 		case 4:
 			drawDesGate(1, RIGHT_SIDE_X - 5, TOP_SIDE_Y + 1);
 			snake.head = {RIGHT_SIDE_X - 5, TOP_SIDE_Y + 2};
+			for (int i = 0; i < snake.size; i++) {
+				snake.part[i] = snake.head;
+			}
 			dir = DOWN;
 			charlock = UP;
 			break;
 		case 5:
-			drawDesGate(2, LEFT_SIDE_X + 1, TOP_SIDE_Y + 16);
-			snake.head = {LEFT_SIDE_X + 2, TOP_SIDE_Y + 16};
+			drawDesGate(2, LEFT_SIDE_X + 1, TOP_SIDE_Y + 14);
+			snake.head = {LEFT_SIDE_X + 2, TOP_SIDE_Y + 14};
+			for (int i = 0; i < snake.size; i++) {
+				snake.part[i] = snake.head;
+			}
 			dir = RIGHT;
 			charlock = LEFT;
 			break;
@@ -776,38 +800,45 @@ void removeDesGate(int stage, bool &cleargate) {
 	switch(stage) {
 		case 2:
 			if (snake.part[snake.size - 1].x != LEFT_SIDE_X + 2 && snake.part[snake.size - 1].y != TOP_SIDE_Y + 2) {
-				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 1, 3, 3);
 				cleargate = true;
+				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 1, 3, 3);
 			}
 			break;
 		case 3:
 			if (snake.part[snake.size - 1].x != LEFT_SIDE_X + 1 && snake.part[snake.size - 1].y != TOP_SIDE_Y + 4) {
-				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 3, 3, 3);
 				cleargate = true;
+				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 3, 3, 3);
 			}
 			break;
 		case 4:
 			if (snake.part[snake.size - 1].x != RIGHT_SIDE_X - 5 && snake.part[snake.size - 1].y != TOP_SIDE_Y + 2) {
-				drawBlank(RIGHT_SIDE_X - 5, TOP_SIDE_Y + 1, 3, 3);
 				cleargate = true;
+				drawBlank(RIGHT_SIDE_X - 6, TOP_SIDE_Y + 1, 3, 3);
 			}
 			break;
 		case 5:
-			if (snake.part[snake.size - 1].x != LEFT_SIDE_X + 2 && snake.part[snake.size - 1].y != TOP_SIDE_Y + 16) {
-				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 15, 3, 3);
+			if (snake.part[snake.size - 1].x != LEFT_SIDE_X + 2 && snake.part[snake.size - 1].y != TOP_SIDE_Y + 14) {
 				cleargate = true;
+				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 13, 3, 3);
 			}
 			break;
 	}
 }
 
-void renderNewStage(int &gatecount, int &maxpoint) {
+void renderNewStage(int &gatecount, int &maxpoint, bool &cleargate) {
+	POSITION temp;
+	temp = snake.head;
 	drawBlank(27, 6, 89, 19);
 	stage++;
 	graphSet(stage, snake, food);
 	gatecount = 0;
 	maxpoint += 10;
 	desGate(stage);
+	cleargate = false;
+	gotoXY(temp.x, temp.y);
+	textColorWithBackground(map[temp.y - TOP_SIDE_Y][temp.x - LEFT_SIDE_X][1], WHITE);
+	if (map[temp.y - TOP_SIDE_Y][temp.x - LEFT_SIDE_X][0] == 0) cout << " ";
+	else cout << char(map[temp.y - TOP_SIDE_Y][temp.x - LEFT_SIDE_X][0]);
 	
 }
 
@@ -821,10 +852,12 @@ void snakeDisappear(POSITION head) {
 		cout << stid[temp];
 		textColorWithBackground(DARK_YELLOW, WHITE);
 		for (int i = temp + 1; i < snake.size - 1; i++) {
+			if (map[snake.part[i].y - TOP_SIDE_Y][snake.part[i].x - LEFT_SIDE_X][0] >= BUSH_LV3 
+			|| map[snake.part[i].y - TOP_SIDE_Y][snake.part[i].x - LEFT_SIDE_X][0] <= BUSH_LV1)
 			gotoXY(snake.part[i].x, snake.part[i].y);
 			cout << stid[i];
 		}
-		Sleep(100);
+		Sleep(70);
 		temp++;
 	}
 
@@ -871,7 +904,7 @@ void newClassicGame() {
 		} else if (score == maxpoint && gatecount == 1) {
 			if (getInGate(snake.head) == true)  {
 				snakeDisappear(snake.head);
-				renderNewStage(gatecount, maxpoint);
+				renderNewStage(gatecount, maxpoint, cleargate);
 				generateFood(foodnum, food);
 				printFood(food);
 			}
@@ -892,7 +925,7 @@ void newClassicGame() {
 		}
 		renderSnake(snake.head);
 		printSnake();
-		Sleep(100);
+		Sleep(70);
 	}
 
 	dir = STOP;
