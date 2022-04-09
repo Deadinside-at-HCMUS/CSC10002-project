@@ -19,14 +19,19 @@ void generateFood(int foodnum, POSITION &food) {
 	food = {x, y};
 }
 
+void removeFood(POSITION &food) {
+	food.x = 0;
+	food.y = 0;
+}
+
 // gate
 void generateGate(int map[22][92][2]) {
 	int x = 0, y = 0;
 	srand(time(NULL));
-	int type = rand() % 1;
+	int type = rand() % 2;
 	do {
-		x = rand() % (PLAY_SCREEN_LENGTH - 2)+ (LEFT_SIDE_X + 1);
-		y = rand() % (PLAY_SCREEN_WIDTH - 2) + (TOP_SIDE_Y + 1);
+		x = rand() % (PLAY_SCREEN_LENGTH - 4)+ (LEFT_SIDE_X + 2);
+		y = rand() % (PLAY_SCREEN_WIDTH - 4) + (TOP_SIDE_Y + 2);
 	} while (!isValidGate(x, y, type));
 	switch (type) {
 		case 0:
@@ -35,7 +40,7 @@ void generateGate(int map[22][92][2]) {
 			}
 			map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1][0] = BLOCK;
 			map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][0] = GATE_SPOT;
-			map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][0] = GATE_SPOT;
+			map[y - TOP_SIDE_Y][x - LEFT_SIDE_X + 1][0] = GATE_SPOT;
 			map[y - TOP_SIDE_Y][x - LEFT_SIDE_X + 2][0] = BLOCK;
 			break;
 
@@ -50,3 +55,4 @@ void generateGate(int map[22][92][2]) {
 	}
 	printGate(x, y, type);
 }
+

@@ -32,5 +32,7 @@ void generateFood(int foodnum, POSITION &food);
 
 void generateGate(int map[22][92][2]);
 
+void removeFood(POSITION &food);
+
 
 #endif // OBJECT

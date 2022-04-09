@@ -65,6 +65,4 @@ void gameTurtorial();
 
 void aboutUs();
 
-void drawGate(int type, int x, int y);
-
 #endif // UI
