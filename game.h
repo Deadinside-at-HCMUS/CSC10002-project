@@ -16,6 +16,8 @@ bool isValidGate(int x, int y, int type);
 
 bool eatFood();
 
+void pauseGameInput(int x, int y);
+
 // create game
 void newClassicGame();
 
@@ -23,5 +25,9 @@ void newInfiniteGame();
 
 // art
 void printGate(int x, int y, int type);
+
+void printSnake(SNAKE *snake);
+
+void printFood(POSITION food);
 
 #endif // GAME

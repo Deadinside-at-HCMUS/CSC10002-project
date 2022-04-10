@@ -9,17 +9,18 @@ int stage;
 int speedcontrol;
 POSITION food;
 SNAKE *snake = new SNAKE;
-enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
-eDirection dir;
+enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN, STAY };
+eDirection dir, temp;
 const char* stid = "21127175211272942112741921127693-21127175211272942112741921127693-21127175211272942112741921127693";
 int map[PLAY_SCREEN_WIDTH][PLAY_SCREEN_LENGTH][2] {};
 
 void gameSetup() {
+	dir = STAY;
 	srand(time(NULL));
 	score = 0;
 	gameover = false;
 	foodnum = 1;
-	charlock = DOWN;
+	charlock = STOP;
 	snake->part = new POSITION[100];
 	snake->head = {(RIGHT_SIDE_X + LEFT_SIDE_X) / 2, (BOTTOM_SIDE_Y + TOP_SIDE_Y) / 2};
 	snake->part[0].y = snake->head.y;
@@ -56,11 +57,10 @@ void getDir() {
 				}
 				break;
 			case 'p':
+				temp = dir;
 				dir = STOP;
 				break;
-			case 'x':
-				dir = STOP;
-				gameover = true;
+			default:
 				break;
 		}
 	}
@@ -83,8 +83,50 @@ void moving() {
 		case RIGHT:
 			snake->head.x++;
 			break;
+
+		case STOP:
+			pauseGameBoard(60, 13);
+			pauseGameInput(60, 13);
+			dir = temp;
+			break;
+			
 		default:
 			break;
+	}
+}
+
+void pauseGameInput(int x, int y) {
+	bool input = false;
+	while (input != true) {
+		if (_kbhit()) {
+			switch (_getch()) {
+				case 'c':
+					for (int i = 0; i < 9; i++) {
+						gotoXY(x, y + i);
+						for (int j = 0; j < 23; j++) {
+							textColorWithBackground(map[y + i - TOP_SIDE_Y][x + j - LEFT_SIDE_X][1], WHITE);
+							if (map[y + i - TOP_SIDE_Y][x + j - LEFT_SIDE_X][0] != 0) {
+								cout << char(map[y + i - TOP_SIDE_Y][x + j - LEFT_SIDE_X][0]);
+							} else {
+								cout << ' ';
+							}
+						}
+					}
+					printSnake(snake);
+					printFood(food);
+					input = true;
+					break;
+				case 's':
+					input = true;
+					break;
+				case 'x':
+					gameover = true;
+					input = true;
+					break;
+				default:
+					break;
+			}
+		}
 	}
 }
 
@@ -207,7 +249,7 @@ void clearTail() {
 	}
 }
 
-void printSnake() {
+void printSnake(SNAKE *snake) {
 	if (map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] != BUSH_LV1
 	 && map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] != BUSH_LV2
 	 && map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] != BUSH_LV3) {
@@ -708,7 +750,7 @@ void graphSet(int stage, SNAKE *snake) {
 	cout << stage;
 	gotoXY(10, 9);
 	cout << score;
-	printSnake();
+	printSnake(snake);
 	switch (stage) {
 		case 1:
 			castMap1();
@@ -897,6 +939,7 @@ void newClassicGame() {
 	int maxpoint = 100;
 
 	while (!gameover) {
+		temp = dir;
 		clearTail();
 		getDir();
 		moving();
@@ -931,7 +974,7 @@ void newClassicGame() {
 			}
 		}
 		renderSnake(snake->head);
-		printSnake();
+		printSnake(snake);
 		Sleep(100);
 	}
 	DeathEffect(snake);
@@ -941,6 +984,10 @@ void newClassicGame() {
 		cout << ' ';
 	}
 	dir = STOP;
+}
+
+void newTimeRushGame() {
+	castMapBase();
 }
 
 void newInfiniteGame() {
@@ -956,7 +1003,7 @@ void newInfiniteGame() {
 	cout << speedcontrol + 1;
 	gotoXY(10, 9);
 	cout << score;
-	printSnake();
+	printSnake(snake);
 	generateFood(foodnum, food);
 	printFood(food);
 
@@ -978,7 +1025,7 @@ void newInfiniteGame() {
 			generatePart(snake);
 		}
 		renderSnake(snake->head);
-		printSnake();
+		printSnake(snake);
 		Sleep(150 - speedcontrol * 10);
 	}
 	DeathEffect(snake);

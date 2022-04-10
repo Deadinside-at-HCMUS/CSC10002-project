@@ -43,6 +43,8 @@ void gameOverSign();
 
 void DeathEffect(SNAKE* snake);
 
+void pauseGameBoard(int x, int y);
+
 // menu function
 
 POSITION inputMainMenu();
@@ -68,5 +70,6 @@ void infoSet(int type);
 void gameTurtorial();
 
 void aboutUs();
+
 
 #endif // UI

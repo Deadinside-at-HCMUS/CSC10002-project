@@ -33,6 +33,7 @@ int main() {
 			} else if (sub_choice.y == 1) {
 				// che do choi time rush
 				infoBoard(1, 5);
+				infoSet(1);
 				drawBlank(27, 6, 89, 19);
 				gotoXY(50, 14);
 				wcout << L"░▒█▀▀█░█▀▀▄░█▀▄▀█░█▀▀░▒█▀▀▀█░▄░░░▄░█▀▀░█▀▀▄";
@@ -50,7 +51,7 @@ int main() {
 				newInfiniteGame();
 				textColorWithBackground(PURPLE, WHITE);
 				drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
-				// drawBlank(27, 6, 89, 19);
+				drawBlank(27, 6, 89, 19);
 				gotoXY(50, 14);
 				wcout << L"░▒█▀▀█░█▀▀▄░█▀▄▀█░█▀▀░▒█▀▀▀█░▄░░░▄░█▀▀░█▀▀▄";
 				gotoXY(50, 15);

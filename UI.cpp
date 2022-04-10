@@ -427,8 +427,7 @@ void aboutUs() {
 
 }
 
-void DeathEffect(SNAKE* snake)
-{
+void DeathEffect(SNAKE* snake) {
 	for (int i = snake->size; i >= 0; i--) {
 		drawChar(snake->part[i].x, snake->part[i].y, DARK_YELLOW, ' ');
 		Sleep(60);
@@ -557,4 +556,37 @@ void gameOverSign() {
 	wcout << L"░▒█░▄▄░█▄▄█░█░▀░█░█▀▀░▒█░░▒█░░█▄█░░█▀▀░█▄▄▀";
 	gotoXY(55, 16);
 	wcout << L"░▒█▄▄▀░▀░░▀░▀░░▒▀░▀▀▀░▒█▄▄▄█░░░▀░░░▀▀▀░▀░▀▀";
+}
+
+void pauseGameBoard(int x, int y) {
+	drawBlank(x, y, 23, 7);
+	textColorWithBackground(PINK, WHITE);
+	for (int i = 0; i < 8; ++i) {
+		gotoXY(x + 21, y + i);
+		cout << char(219);
+		// Sleep(10);
+	}
+	for (int i = y + 8; i > y; --i) {
+		gotoXY(x, i);
+		cout << char(219);
+		// Sleep(10);
+	}
+	gotoXY(x, y);
+	for (int i = 0; i < 20 + 2; ++i) {
+		cout << char(220);
+		// Sleep(10);
+	}
+	for (int i = x + 20 + 1; i >= x; --i) {
+		gotoXY(i, y + 8);
+		cout << char(223);
+		// Sleep(10);
+	}
+
+	gotoXY(x + 3, y + 2);
+	cout << " (c): continue";
+	gotoXY(x + 3, y + 4);
+	cout << " (s): save game";
+	gotoXY(x + 3, y + 6);
+	cout << " (x): exit";
+
 }
