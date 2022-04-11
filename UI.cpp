@@ -315,6 +315,9 @@ POSITION inputPlayMenu() {
 					inputPlayBoxEffect(choice, DARK_RED);
 				}
 				break;
+			case esc:
+				choice.x = 1;
+				return choice;
 			case enter:
 				return choice;
 			}
@@ -568,34 +571,30 @@ void deathEffect(SNAKE* snake) {
 }
 
 void pauseGameBoard(int x, int y) {
-	drawBlank(x, y, 23, 7);
+	drawBlank(x, y, 22, 7);
 	textColorWithBackground(PINK, WHITE);
 	for (int i = 0; i < 8; ++i) {
-		gotoXY(x + 21, y + i);
+		gotoXY(x + 22, y + i);
 		cout << char(219);
-		// Sleep(10);
 	}
 	for (int i = y + 8; i > y; --i) {
-		gotoXY(x, i);
+		gotoXY(x + 1, i);
 		cout << char(219);
-		// Sleep(10);
 	}
-	gotoXY(x, y);
+	gotoXY(x + 1, y);
 	for (int i = 0; i < 20 + 2; ++i) {
 		cout << char(220);
-		// Sleep(10);
 	}
-	for (int i = x + 20 + 1; i >= x; --i) {
+	for (int i = x + 21 + 1; i >= x + 1; --i) {
 		gotoXY(i, y + 8);
 		cout << char(223);
-		// Sleep(10);
 	}
 
-	gotoXY(x + 3, y + 2);
+	gotoXY(x + 4, y + 2);
 	cout << " (c): continue";
-	gotoXY(x + 3, y + 4);
+	gotoXY(x + 4, y + 4);
 	cout << " (s): save game";
-	gotoXY(x + 3, y + 6);
+	gotoXY(x + 4, y + 6);
 	cout << " (x): exit";
 
 }
@@ -697,6 +696,9 @@ POSITION inputSubChoiceMenu() {
 					inputSubChoiceEffect(choice, DARK_RED);
 				}
 				break;
+			case esc:
+				choice.x = 1;
+				return choice;
 			case enter:
 				return choice;
 			}
@@ -757,6 +759,10 @@ POSITION inputInfiniteSubChoiceMenu() {
 					inputInfiniteSubChoiceEffect(choice, DARK_RED);
 				}
 				break;
+			case esc:
+				choice.x = 1;
+				return choice;
+
 			case enter:
 				return choice;
 			}
@@ -831,6 +837,8 @@ int inputDifficultyChoice(int choice) {
 						choice--;
 					}
 					break;
+				case esc:
+					return -1;
 				case enter:
 					return choice;
 			}
@@ -909,6 +917,8 @@ int choseClassicPlayer(int choice, CLASSICDATA *data, int playercount) {
 						choice--;
 					}
 					break;
+				case esc:
+					return -1;
 				case enter:
 					return choice;
 			}
@@ -922,6 +932,7 @@ int loadSaveClassicPlayer(CLASSICDATA *data, int playercount) {
 	if (playercount <= 0) {
 		gotoXY(28, 7);
 		cout << "Empty Data!";
+		return -1;
 	} else {
 		drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, YELLOW);
 		int choice = 0;
@@ -1051,6 +1062,8 @@ int choseTimeRushPlayer(int choice, TIMERUSHDATA* data, int playercount) {
 					choice--;
 				}
 				break;
+			case esc:
+				return -1;
 			case enter:
 				return choice;
 			}
@@ -1064,6 +1077,7 @@ int loadSaveTimeRushPlayer(TIMERUSHDATA* data, int playercount) {
 	if (playercount <= 0) {
 		gotoXY(28, 7);
 		cout << "Empty Data!";
+		return -1;
 	}
 	else {
 		drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, YELLOW);
@@ -1177,6 +1191,8 @@ int choseInfinitePlayer(int choice, INFINITEDATA *data, int playercount) {
 						choice--;
 					}
 					break;
+				case esc:
+					return -1;
 				case enter:
 					return choice;
 			}
@@ -1190,6 +1206,7 @@ int loadSaveInfinitePlayer(INFINITEDATA *data, int playercount) {
 	if (playercount <= 0) {
 		gotoXY(28, 7);
 		cout << "Empty Data!";
+		return -1;
 	} else {
 		drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, YELLOW);
 		int choice = 0;

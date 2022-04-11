@@ -144,6 +144,8 @@ void pauseGameInput(int x, int y, int type) {
 						player.timerushname = name;
 						player.score = score;
 						player.stage = stage;
+						player.time = gametime;
+						player.difficulty = difficulty;
 						player.snake = snake;
 						timerush_data = pushTimeRushData(timerush_data, player, timerush_player);
 						save = true;
@@ -1264,81 +1266,120 @@ void openGame() {
 			system("cls");
 			playMenu();
 			POSITION sub_choice = inputPlayMenu();
-			if (sub_choice.y == 0) {
+			if (sub_choice.x == 1) {
+				// ve lai menu
+			} else if (sub_choice.y == 0) {
 				POSITION minichoice = subChoiceMenu();
-				if (minichoice.y == 0) {
+				if (minichoice.x == 1) {
+					//ve lai menu
+				} else if (minichoice.y == 0) {
 					difficulty = choseDifficulty();
-					drawBlank(40, 11, 40, 9);
-					name = inputName();
-					gameSetup();
+					if (difficulty != -1) {
+						drawBlank(40, 11, 40, 9);
+						name = inputName();
+						gameSetup();
+						// che do choi classic
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newClassicGame(difficulty);
+						textColorWithBackground(CYAN, WHITE);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						drawBlank(27, 6, 89, 19);
+						gameOverSign();
+						Sleep(1000);
+					}
 				} else {
 					gameSetup();
 					int idx = loadSaveClassicPlayer(classic_data, classic_player);
-					loadClassicDataIntoGame(classic_data[idx]);
+					if (idx != -1) {
+						loadClassicDataIntoGame(classic_data[idx]);
+						// che do choi classic
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newClassicGame(difficulty);
+						textColorWithBackground(CYAN, WHITE);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						drawBlank(27, 6, 89, 19);
+						gameOverSign();
+						Sleep(1000);
+					}
 				}
-				// che do choi classic
-				infoBoard(1, 5);
-				drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
-				infoSet(1);
-				// goi game
-				newClassicGame(difficulty);
-				textColorWithBackground(CYAN, WHITE);
-				drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
-				drawBlank(27, 6, 89, 19);
-				gameOverSign();
-				Sleep(1000);
 
 			} else if (sub_choice.y == 1) {
 				//che do time rush
 				POSITION minichoice = subChoiceMenu();
-				if (minichoice.y == 0) {
+				if (minichoice.x == 1) {
+					//ve lai menu
+				} else if (minichoice.y == 0) {
 					difficulty = choseDifficulty();
-					drawBlank(40, 11, 40, 9);
-					name = inputName();
-					gameSetup();
-					infoBoard(1, 5);
-					drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
-					infoSet(1);
-					// goi game
-					newTimeRushGame(inputTimeChoice(), difficulty);
+					if (difficulty != -1) {
+						drawBlank(40, 11, 40, 9);
+						name = inputName();
+						gameSetup();
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newTimeRushGame(inputTimeChoice(), difficulty);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						drawBlank(27, 6, 89, 19);
+						gameOverSign();
+						Sleep(1000);
+					}
 				} else {
 					gameSetup();
 					int idx = loadSaveTimeRushPlayer(timerush_data, timerush_player);
-					loadTimeRushDataIntoGame(timerush_data[idx]);
-					infoBoard(1, 5);
-					drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
-					infoSet(1);
-					// goi game
-					newTimeRushGame(stage, difficulty);
+					if (idx != -1) {
+						loadTimeRushDataIntoGame(timerush_data[idx]);
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newTimeRushGame(stage, difficulty);
+						drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+						drawBlank(27, 6, 89, 19);
+						gameOverSign();
+						Sleep(1000);
+					}
 				}
-				drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
-				drawBlank(27, 6, 89, 19);
-				gameOverSign();
-				Sleep(1000);
 			} else {
 				//che do choi infinitie
 				POSITION minichoice = infiniteSubChoiceMenu();
 				drawBlank(1, 5, INFO_BOARD_LENGTH, INFO_BOARD_WIDTH);
-				if (minichoice.y == 0) {
+				if (minichoice.x == 1) {
+					//ve lai menu
+				} else if (minichoice.y == 0) {
 					textColorWithBackground(PURPLE, WHITE);
 					drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
 					infoSet(3);
 					gameSetup();
 					newInfiniteGame();
+					drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+					drawBlank(27, 6, 89, 19);
+					gameOverSign();
+					Sleep(1000);
 				} else {
 					gameSetup();
 					infoSet(3);
 					textColorWithBackground(PURPLE, WHITE);
 					drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
 					int idx = loadSaveInfinitePlayer(infinite_data, infinite_player);
-					loadInfiniteDataIntoGame(infinite_data[idx]);
-					drawBlank(27, 6, 89, 19);
-					newInfiniteGame();
+					if (idx != -1) {
+						loadInfiniteDataIntoGame(infinite_data[idx]);
+						drawBlank(27, 6, 89, 19);
+						newInfiniteGame();
+						drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+						drawBlank(27, 6, 89, 19);
+						gameOverSign();
+						Sleep(1000);
+					}
+					
 				}
-				drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
-				drawBlank(27, 6, 89, 19);
-				gameOverSign();
-				Sleep(1000);
+
 			}
 		}
 		else if (choice.x == 1 && choice.y == 0) {

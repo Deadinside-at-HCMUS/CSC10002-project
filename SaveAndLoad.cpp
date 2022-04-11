@@ -2,7 +2,7 @@
 using namespace std;
 
 //classic
-void saveClassicFile(CLASSICDATA *data, int playercount) {
+void saveClassicFile(CLASSICDATA* data, int playercount) {
     ofstream fOut;
     fOut.open("classicData.txt", ios::out);
     fOut << playercount << endl;
@@ -15,7 +15,7 @@ void saveClassicFile(CLASSICDATA *data, int playercount) {
         fOut << "Head: " << data[i].snake->head.x << ' ' << data[i].snake->head.y << endl;
         fOut << "Part:";
         int j = 0;
-        for ( ; j < data[i].snake->size - 1; j++) {
+        for (; j < data[i].snake->size - 1; j++) {
             fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << ',';
         }
         fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.' << endl;
@@ -24,7 +24,7 @@ void saveClassicFile(CLASSICDATA *data, int playercount) {
     fOut.close();
 }
 
-void loadClassicFile(CLASSICDATA *&data, int &playercount) {
+void loadClassicFile(CLASSICDATA*& data, int& playercount) {
     ifstream fIn;
     fIn.open("classicData.txt", ios::in);
     fIn >> playercount;
@@ -55,20 +55,14 @@ void loadClassicFile(CLASSICDATA *&data, int &playercount) {
     fIn.close();
 }
 
-void moveClassicData(CLASSICDATA *des, CLASSICDATA *src, int playercount) {
-    if (src == nullptr || des == nullptr) return;
-    for (int i = 0; i < playercount; i++) {
-        des[i] = src[i];
-    }
-}
-
-CLASSICDATA *pushClassicData(CLASSICDATA *data, CLASSICDATA player, int &playercount) {
+CLASSICDATA* pushClassicData(CLASSICDATA* data, CLASSICDATA player, int& playercount) {
     CLASSICDATA* temp = new CLASSICDATA[playercount + 1];
     if (data != nullptr) {
-        moveClassicData(temp, data, playercount);
+        temp[0] = player;
+        for (int i = 0; i < playercount; i++) {
+            temp[i + 1] = data[i];
+        }
         playercount++;
-        temp[playercount] = player;
-        freeClassicData(data, playercount - 1);
     }
     else {
         playercount++;
@@ -77,7 +71,7 @@ CLASSICDATA *pushClassicData(CLASSICDATA *data, CLASSICDATA player, int &playerc
     return temp;
 }
 
-void freeClassicData(CLASSICDATA *data, int playercount) {
+void freeClassicData(CLASSICDATA* data, int playercount) {
     for (int i = 0; i < playercount; i++) {
         delete[] data[i].snake->part;
         delete data[i].snake;
@@ -86,7 +80,7 @@ void freeClassicData(CLASSICDATA *data, int playercount) {
 }
 
 // infinite
-void saveInfiniteFile(INFINITEDATA *data, int playercount) {
+void saveInfiniteFile(INFINITEDATA* data, int playercount) {
     ofstream fOut;
     fOut.open("infiniteData.txt", ios::out);
     fOut << playercount << endl;
@@ -97,7 +91,7 @@ void saveInfiniteFile(INFINITEDATA *data, int playercount) {
         fOut << "Head: " << data[i].snake->head.x << ' ' << data[i].snake->head.y << endl;
         fOut << "Part:";
         int j = 0;
-        for ( ; j < data[i].snake->size - 1; j++) {
+        for (; j < data[i].snake->size - 1; j++) {
             fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << ',';
         }
         fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.' << endl;
@@ -106,7 +100,7 @@ void saveInfiniteFile(INFINITEDATA *data, int playercount) {
     fOut.close();
 }
 
-void loadInfiniteFile(INFINITEDATA *&data, int &playercount) {
+void loadInfiniteFile(INFINITEDATA*& data, int& playercount) {
     ifstream fIn;
     fIn.open("infiniteData.txt", ios::in);
     fIn >> playercount;
@@ -133,20 +127,14 @@ void loadInfiniteFile(INFINITEDATA *&data, int &playercount) {
     fIn.close();
 }
 
-void moveInfiniteData(INFINITEDATA *des, INFINITEDATA *src, int playercount) {
-    if (src == nullptr || des == nullptr) return;
-    for (int i = 0; i < playercount; i++) {
-        des[i] = src[i];
-    }
-}
-
-INFINITEDATA *pushInfiniteData(INFINITEDATA *data, INFINITEDATA player, int &playercount) {
+INFINITEDATA* pushInfiniteData(INFINITEDATA* data, INFINITEDATA player, int& playercount) {
     INFINITEDATA* temp = new INFINITEDATA[playercount + 1];
     if (data != nullptr) {
-        moveInfiniteData(temp, data, playercount);
+        temp[0] = player;
+        for (int i = 0; i < playercount; i++) {
+            temp[i + 1] = data[i];
+        }
         playercount++;
-        temp[playercount] = player;
-        freeInfiniteData(data, playercount - 1);
     }
     else {
         playercount++;
@@ -155,7 +143,7 @@ INFINITEDATA *pushInfiniteData(INFINITEDATA *data, INFINITEDATA player, int &pla
     return temp;
 }
 
-void freeInfiniteData(INFINITEDATA *data, int playercount) {
+void freeInfiniteData(INFINITEDATA* data, int playercount) {
     for (int i = 0; i < playercount; i++) {
         delete[] data[i].snake->part;
         delete data[i].snake;
@@ -165,7 +153,7 @@ void freeInfiniteData(INFINITEDATA *data, int playercount) {
 
 
 //time rush
-void saveTimeRushFile(TIMERUSHDATA *data, int playercount) {
+void saveTimeRushFile(TIMERUSHDATA* data, int playercount) {
     ofstream fOut;
     fOut.open("timeRushData.txt", ios::out);
     fOut << playercount << endl;
@@ -175,20 +163,21 @@ void saveTimeRushFile(TIMERUSHDATA *data, int playercount) {
         fOut << "Stage: " << data[i].stage << endl;
         fOut << "Score: " << data[i].score << endl;
         fOut << "Time: " << data[i].time << endl;
+        fOut << "Difficulty: " << data[i].difficulty << endl;
         fOut << "Head: " << data[i].snake->head.x << ' ' << data[i].snake->head.y << endl;
         fOut << "Part:";
         int j = 0;
-        for ( ; j < data[i].snake->size - 1; j++) {
+        for (; j < data[i].snake->size - 1; j++) {
             fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << ',';
         }
         fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.' << endl;
         fOut << endl;
-        
+
     }
     fOut.close();
 }
 
-void loadTimeRushFile(TIMERUSHDATA *&data, int &playercount) {
+void loadTimeRushFile(TIMERUSHDATA*& data, int& playercount) {
     ifstream fIn;
     fIn.open("timeRushData.txt", ios::in);
     fIn >> playercount;
@@ -221,20 +210,21 @@ void loadTimeRushFile(TIMERUSHDATA *&data, int &playercount) {
     fIn.close();
 }
 
-void moveTimeRushData(TIMERUSHDATA *des, TIMERUSHDATA *src, int playercount) {
+void moveTimeRushData(TIMERUSHDATA* des, TIMERUSHDATA* src, int playercount) {
     if (src == nullptr || des == nullptr) return;
     for (int i = 0; i < playercount; i++) {
         des[i] = src[i];
     }
 }
 
-TIMERUSHDATA *pushTimeRushData(TIMERUSHDATA *data, TIMERUSHDATA player, int &playercount) {
+TIMERUSHDATA* pushTimeRushData(TIMERUSHDATA* data, TIMERUSHDATA player, int& playercount) {
     TIMERUSHDATA* temp = new TIMERUSHDATA[playercount + 1];
     if (data != nullptr) {
-        moveTimeRushData(temp, data, playercount);
+        temp[0] = player;
+        for (int i = 0; i < playercount; i++) {
+            temp[i + 1] = data[i];
+        }
         playercount++;
-        temp[playercount] = player;
-        freeTimeRushData(data, playercount - 1);
     }
     else {
         playercount++;
@@ -243,7 +233,7 @@ TIMERUSHDATA *pushTimeRushData(TIMERUSHDATA *data, TIMERUSHDATA player, int &pla
     return temp;
 }
 
-void freeTimeRushData(TIMERUSHDATA *data, int playercount) {
+void freeTimeRushData(TIMERUSHDATA* data, int playercount) {
     for (int i = 0; i < playercount; i++) {
         delete[] data[i].snake->part;
         delete data[i].snake;

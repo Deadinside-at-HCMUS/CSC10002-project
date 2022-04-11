@@ -1,15 +1,25 @@
-2
+3
+Player: thien choi game
+Stage: 1
+Score: 130
+Time: 360
+Difficulty: 1
+Head: 87 22
+Part: 87 22, 87 22, 88 22, 89 22, 90 22, 91 22, 92 22, 93 22, 94 22, 95 22, 95 21, 95 20, 95 19, 95 18.
+
 Player: thien
 Stage: 1
 Score: 10
 Time: 310
+Difficulty: 1
 Head: 81 14
-Part:  81 14, 81 15.
+Part: 81 14, 81 15.
 
 Player: hi huu
 Stage: 2
 Score: 10
 Time: 200
+Difficulty: 1
 Head: 81 14
-Part:  81 14, 81 15.
+Part: 81 14, 81 15.
 

@@ -3,6 +3,7 @@
 #define PARAMETER
 
 #define enter 13
+#define esc 27
 #define UP_ARROW 72
 #define DOWN_ARROW 80
 #define LEFT_ARROW 75

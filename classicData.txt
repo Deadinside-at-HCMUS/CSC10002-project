@@ -1,4 +1,18 @@
-2
+4
+Player: thien tram cam
+Stage: 1
+Score: 100
+Difficulty: 1
+Head: 87 9
+Part: 87 9, 87 9, 88 9, 89 9, 90 9, 91 9, 92 9, 93 9, 94 9, 95 9, 96 9.
+
+Player: thien dep zai
+Stage: 1
+Score: 30
+Difficulty: 1
+Head: 99 23
+Part: 99 23, 99 23, 100 23, 101 23.
+
 Player: thien
 Stage: 1
 Score: 10
