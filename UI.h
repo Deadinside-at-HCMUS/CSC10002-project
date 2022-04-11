@@ -77,6 +77,8 @@ void renderTimeRush(SNAKE *snake, int& time);
 
 POSITION subChoiceMenu();
 
+POSITION infiniteSubChoiceMenu();
+
 int choseDifficulty();
 
 string inputName();

@@ -14,7 +14,7 @@ void freeClassicData(CLASSICDATA *data, int playercount);
 //infinite
 void saveInfiniteFile(INFINITEDATA *data, int playercount);
 
-void loadInfiniteFile(INFINITEDATA *data, int &playercount);
+void loadInfiniteFile(INFINITEDATA *&data, int &playercount);
 
 INFINITEDATA *pushInfiniteData(INFINITEDATA *data, INFINITEDATA player, int &playercount);
 
@@ -23,7 +23,7 @@ void freeInfiniteData(INFINITEDATA *data, int playercount);
 //timerush
 void saveTimeRushFile(TIMERUSHDATA *data, int playercount);
 
-void loadTimeRushFile(TIMERUSHDATA *data, int &playercount);
+void loadTimeRushFile(TIMERUSHDATA *&data, int &playercount);
 
 TIMERUSHDATA *pushTimeRushData(TIMERUSHDATA *data, TIMERUSHDATA player, int &playercount);
 

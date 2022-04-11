@@ -1,1 +1,11 @@
-0
+2
+Player: thien
+Score: 10
+Head: 81 14
+Part:  81 14, 81 15.
+
+Player: hi huu
+Score: 10
+Head: 81 14
+Part:  81 14, 81 15.
+

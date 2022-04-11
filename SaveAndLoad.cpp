@@ -18,8 +18,8 @@ void saveClassicFile(CLASSICDATA *data, int playercount) {
         for ( ; j < data[i].snake->size - 1; j++) {
             fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << ',';
         }
-        fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.';
-        
+        fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.' << endl;
+        fOut << endl;
     }
     fOut.close();
 }
@@ -79,9 +79,10 @@ CLASSICDATA *pushClassicData(CLASSICDATA *data, CLASSICDATA player, int &playerc
 
 void freeClassicData(CLASSICDATA *data, int playercount) {
     for (int i = 0; i < playercount; i++) {
+        delete[] data[i].snake->part;
         delete data[i].snake;
     }
-    delete data;
+    delete[] data;
 }
 
 // infinite
@@ -94,38 +95,40 @@ void saveInfiniteFile(INFINITEDATA *data, int playercount) {
         fOut << "Player: " << data[i].infinitename << endl;
         fOut << "Score: " << data[i].score << endl;
         fOut << "Head: " << data[i].snake->head.x << ' ' << data[i].snake->head.y << endl;
-        fOut << "Part: ";
+        fOut << "Part:";
         int j = 0;
         for ( ; j < data[i].snake->size - 1; j++) {
             fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << ',';
         }
-        fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.';
+        fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.' << endl;
+        fOut << endl;
     }
     fOut.close();
 }
 
-void loadInfiniteFile(INFINITEDATA *data, int &playercount) {
+void loadInfiniteFile(INFINITEDATA *&data, int &playercount) {
     ifstream fIn;
     fIn.open("infiniteData.txt", ios::in);
     fIn >> playercount;
-    data = new INFINITEDATA[playercount];
-    for (int i = 0; i < playercount; i++) {
-        fIn.ignore(100, ': ');
-        getline(fIn, data[i].infinitename);
-        fIn.ignore();
-        fIn.ignore(100, ' ');
-        fIn >> data[i].score;
-        fIn.ignore(100, ' ');
-        data[i].snake = new SNAKE;
-        fIn >> data[i].snake->head.x >> data[i].snake->head.y;
-        fIn.ignore(100, ' ');
-        data[i].snake->size = data[i].score / 10;
-        data[i].snake->part = new POSITION[data[i].snake->size];
-        for (int j = 0; j < data[i].snake->size; j++) {
-            fIn >> data[i].snake->part[j].x >> data[i].snake->part[j].y;
-            fIn.ignore();
+    if (playercount != 0) {
+        data = new INFINITEDATA[playercount];
+        for (int i = 0; i < playercount; i++) {
+            fIn.ignore(100, ' ');
+            getline(fIn, data[i].infinitename);
+            fIn.ignore(100, ':');
+            fIn >> data[i].score;
+            fIn.ignore(100, ':');
+            data[i].snake = new SNAKE;
+            fIn >> data[i].snake->head.x >> data[i].snake->head.y;
+            fIn.ignore(100, ':');
+            data[i].snake->size = data[i].score / 10 + 1;
+            data[i].snake->part = new POSITION[data[i].snake->size];
+            for (int j = 0; j < data[i].snake->size; j++) {
+                fIn >> data[i].snake->part[j].x >> data[i].snake->part[j].y;
+                fIn.ignore();
+            }
+            fIn.ignore(2);
         }
-        fIn.ignore(2);
     }
     fIn.close();
 }
@@ -154,9 +157,10 @@ INFINITEDATA *pushInfiniteData(INFINITEDATA *data, INFINITEDATA player, int &pla
 
 void freeInfiniteData(INFINITEDATA *data, int playercount) {
     for (int i = 0; i < playercount; i++) {
+        delete[] data[i].snake->part;
         delete data[i].snake;
     }
-    delete data;
+    delete[] data;
 }
 
 
@@ -172,43 +176,47 @@ void saveTimeRushFile(TIMERUSHDATA *data, int playercount) {
         fOut << "Score: " << data[i].score << endl;
         fOut << "Time: " << data[i].time << endl;
         fOut << "Head: " << data[i].snake->head.x << ' ' << data[i].snake->head.y << endl;
-        fOut << "Part: ";
+        fOut << "Part:";
         int j = 0;
         for ( ; j < data[i].snake->size - 1; j++) {
             fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << ',';
         }
-        fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.';
+        fOut << ' ' << data[i].snake->part[j].x << ' ' << data[i].snake->part[j].y << '.' << endl;
+        fOut << endl;
         
     }
     fOut.close();
 }
 
-void loadTimeRushFile(TIMERUSHDATA *data, int &playercount) {
+void loadTimeRushFile(TIMERUSHDATA *&data, int &playercount) {
     ifstream fIn;
     fIn.open("timeRushData.txt", ios::in);
     fIn >> playercount;
-    data = new  TIMERUSHDATA[playercount];
-    for (int i = 0; i < playercount; i++) {
-        fIn.ignore(100, ': ');
-        getline(fIn, data[i].timerushname);
-        fIn.ignore();
-        fIn.ignore(100, ' ');
-        fIn >> data[i].stage;
-        fIn.ignore(100, ' ');
-        fIn >> data[i].score;
-        fIn.ignore(100, ' ');
-        fIn >> data[i].time;
-        fIn.ignore(100, ' ');
-        data[i].snake = new SNAKE;
-        fIn >> data[i].snake->head.x >> data[i].snake->head.y;
-        fIn.ignore(100, ' ');
-        data[i].snake->size = data[i].score / 10;
-        data[i].snake->part = new POSITION[data[i].snake->size];
-        for (int j = 0; j < data[i].snake->size; j++) {
-            fIn >> data[i].snake->part[j].x >> data[i].snake->part[j].y;
-            fIn.ignore();
+    if (playercount != 0) {
+        data = new TIMERUSHDATA[playercount];
+        for (int i = 0; i < playercount; i++) {
+            fIn.ignore(100, ' ');
+            getline(fIn, data[i].timerushname);
+            fIn.ignore(100, ':');
+            fIn >> data[i].stage;
+            fIn.ignore(100, ':');
+            fIn >> data[i].score;
+            fIn.ignore(100, ':');
+            fIn >> data[i].time;
+            fIn.ignore(100, ':');
+            fIn >> data[i].difficulty;
+            fIn.ignore(100, ':');
+            data[i].snake = new SNAKE;
+            fIn >> data[i].snake->head.x >> data[i].snake->head.y;
+            fIn.ignore(100, ':');
+            data[i].snake->size = data[i].score / 10 + 1;
+            data[i].snake->part = new POSITION[data[i].snake->size];
+            for (int j = 0; j < data[i].snake->size; j++) {
+                fIn >> data[i].snake->part[j].x >> data[i].snake->part[j].y;
+                fIn.ignore();
+            }
+            fIn.ignore(2);
         }
-        fIn.ignore(2);
     }
     fIn.close();
 }
@@ -237,7 +245,8 @@ TIMERUSHDATA *pushTimeRushData(TIMERUSHDATA *data, TIMERUSHDATA player, int &pla
 
 void freeTimeRushData(TIMERUSHDATA *data, int playercount) {
     for (int i = 0; i < playercount; i++) {
+        delete[] data[i].snake->part;
         delete data[i].snake;
     }
-    delete data;
+    delete[] data;
 }

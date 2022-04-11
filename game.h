@@ -21,7 +21,7 @@ void pauseGameInput(int x, int y, int type);
 // create game
 void newClassicGame(int difficulty);
 
-void newTimeRushGame(int stage);
+void newTimeRushGame(int stage, int difficulty);
 
 void newInfiniteGame();
 
