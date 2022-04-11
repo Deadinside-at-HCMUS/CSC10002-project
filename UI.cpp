@@ -326,6 +326,33 @@ POSITION inputPlayMenu() {
 	}
 }
 
+int inputTimeChoice() {
+	drawBoard(57, 9, 30, 9, PINK);
+	gotoXY(67, 11);
+	cout << "[1] Map 1";
+	gotoXY(67, 12);
+	cout << "[2] Map 2";
+	gotoXY(67, 13);
+	cout << "[3] Map 3";
+	gotoXY(67, 14);
+	cout << "[4] Map 4";
+	gotoXY(67, 15);
+	cout << "[5] Map 5";
+	drawBoard(57, 18, 30, 4, PINK);
+	gotoXY(57, 18);
+	for (int i = 0; i < 31; i++) {
+		cout << char(BLOCK);
+	}
+	gotoXY(66, 20);
+	cout << "Chose a map: ";
+	int choice;
+	cin >> choice;
+	choice = choice % 5;
+	if (choice == 0) choice = 5;
+	return choice;
+
+}
+
 void infoBoard(int x, int y) {
 	drawBlank(x, y, INFO_BOARD_LENGTH, INFO_BOARD_WIDTH);
 	gotoXY(x, y);
@@ -372,9 +399,6 @@ void infoSet(int type) {
 
 	gotoXY(3, 11);
 	cout << "(p): Pause";
-
-	gotoXY(3, 13);
-	cout << "(x): Exit";
 
 }
 
@@ -427,7 +451,7 @@ void aboutUs() {
 
 }
 
-void DeathEffect(SNAKE* snake) {
+void deathEffect(SNAKE* snake) {
 	for (int i = snake->size; i >= 0; i--) {
 		drawChar(snake->part[i].x, snake->part[i].y, DARK_YELLOW, ' ');
 		Sleep(60);
@@ -548,16 +572,6 @@ void DeathEffect(SNAKE* snake) {
 	}
 }
 
-void gameOverSign() {
-	textColorWithBackground(CYAN, WHITE);
-	gotoXY(55, 14);
-	wcout << L"░▒█▀▀█░█▀▀▄░█▀▄▀█░█▀▀░▒█▀▀▀█░▄░░░▄░█▀▀░█▀▀▄";
-	gotoXY(55, 15);
-	wcout << L"░▒█░▄▄░█▄▄█░█░▀░█░█▀▀░▒█░░▒█░░█▄█░░█▀▀░█▄▄▀";
-	gotoXY(55, 16);
-	wcout << L"░▒█▄▄▀░▀░░▀░▀░░▒▀░▀▀▀░▒█▄▄▄█░░░▀░░░▀▀▀░▀░▀▀";
-}
-
 void pauseGameBoard(int x, int y) {
 	drawBlank(x, y, 23, 7);
 	textColorWithBackground(PINK, WHITE);
@@ -589,4 +603,520 @@ void pauseGameBoard(int x, int y) {
 	gotoXY(x + 3, y + 6);
 	cout << " (x): exit";
 
+}
+
+void renderTimeRush(SNAKE *snake, int& time) {
+	textColorWithBackground(BLUE, WHITE);
+	gotoXY(3, 15);
+	cout << "TIME: ";
+	gotoXY(3, 17);
+	switch (time / 5) {
+	case 5:
+		cout << char(182) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 10:
+		cout << char(182) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 15:
+		cout << char(182) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 20:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 25:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 30:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 35:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 40:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 45:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 50:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 55:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(176) << char(199);
+		break;
+	case 60:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(176) << char(199);
+		break;
+	case 65:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(176) << char(199);
+		break;
+	case 70:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(199);
+		break;
+	case 71:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(199);
+		break;	
+	case 72:
+		cout << char(182) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(219) << char(199);
+		break;
+	}
+}
+
+// sub menu
+void inputSubChoiceEffect(POSITION choice, int color) {
+	if (choice.y == 0) {
+		textColorWithBackground(color, WHITE);
+		drawChoiceBox(1, 10, 22, 5);
+		gotoXY(8, 12);
+		cout << "DIFFICULTY";
+	} else {
+		textColorWithBackground(color, WHITE);
+		drawChoiceBox(1, 19, 22, 5);
+		gotoXY(8, 21);
+		cout << "LOAD GAME";
+	}
+}
+
+POSITION inputSubChoiceMenu() {
+	POSITION choice {0, 0};
+	POSITION prechoice {0, 0};
+	while (true) {
+		if (_kbhit()) {
+			switch (_getch()) {
+			case 'w': case UP_ARROW:
+				if (choice.y != 0) {
+					prechoice = choice;
+					choice.y--;
+					inputSubChoiceEffect(prechoice, DARK_YELLOW);
+					inputSubChoiceEffect(choice, DARK_RED);
+				}
+				break;
+			case 's': case DOWN_ARROW:
+				if (choice.y != 1) {
+					prechoice = choice;
+					choice.y++;
+					inputSubChoiceEffect(prechoice, DARK_YELLOW);
+					inputSubChoiceEffect(choice, DARK_RED);
+				}
+				break;
+			case enter:
+				return choice;
+			}
+		}
+	}
+}
+
+POSITION subChoiceMenu() {
+	drawBlank(1, 5, 21, 20);
+	textColorWithBackground(DARK_RED, WHITE);
+	drawChoiceBox(1, 10, 22, 5);
+	gotoXY(8, 12);
+	cout << "DIFFICULTY";
+
+	textColorWithBackground(DARK_YELLOW, WHITE);
+	drawChoiceBox(1, 19, 22, 5);
+	gotoXY(8, 21);
+	cout << "LOAD GAME";
+
+	return inputSubChoiceMenu();
+}
+
+//difficulty
+void hoverDifficultyyChoice(int choice, int prechoice) {
+	textColorWithBackground(PURPLE, WHITE);
+	switch (choice) {
+		case 0:
+			gotoXY(40, 11);
+			cout << ">> Easy        ";
+			break;
+		case 1:
+			gotoXY(40, 16);
+			cout << ">> Normal      ";
+			break;
+		case 2:
+			gotoXY(40, 21);
+			cout << ">> Hard	    ";
+			break;
+	}
+
+	textColorWithBackground(DARK_PINK, WHITE);
+	switch (prechoice) {
+		case 0:
+			gotoXY(40, 11);
+			cout << "Easy           ";
+			break;
+		case 1:
+			gotoXY(40, 16);
+			cout << "Normal         ";
+			break;
+		case 2:
+			gotoXY(40, 21);
+			cout << "Hard	        ";
+			break;
+	}
+}
+
+int inputDifficultyChoice(int choice) {
+	int prechoice = choice + 1;
+	while (true) {
+		if (_kbhit()) {
+			switch (_getch()) {
+				case 's': case DOWN_ARROW:
+					if (choice != 2) {
+						prechoice = choice;
+						choice++;
+					}
+					break;
+				case 'w': case UP_ARROW:
+					if (choice != 0) {
+						prechoice = choice;
+						choice--;
+					}
+					break;
+				case enter:
+					return choice;
+			}
+		}
+		hoverDifficultyyChoice(choice, prechoice);
+	}
+
+}
+
+int choseDifficulty() {
+	int choice = 0;
+	textColorWithBackground(PURPLE, WHITE);
+	gotoXY(40, 11);
+	cout << ">> Easy";
+	textColorWithBackground(DARK_PINK, WHITE);
+	gotoXY(40, 16);
+	cout << "Normal";
+	gotoXY(40, 21);
+	cout << "Hard";
+	return inputDifficultyChoice(choice);
+}
+
+//classic
+void hoverClassicPlayerChoice(POSITION choice, POSITION prechoice, CLASSICDATA *data) {
+	if (choice.y == prechoice.y && choice.x == prechoice.x) return;
+	textColorWithBackground(PURPLE, WHITE);
+	if (choice.x == 0) {
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.y].classicname;
+	} else {
+		gotoXY(75, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.x * 10 + choice.y].classicname;
+	}
+	textColorWithBackground(DARK_PINK, WHITE);
+	if (prechoice.x == 0) {
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << data[choice.y].classicname << "   ";
+	} else {
+		gotoXY(75, 7 + 2 * choice.y);
+		cout << data[choice.x * 10 + choice.y].classicname << "   ";
+	}
+}
+
+POSITION choseClassicPlayer(POSITION choice, CLASSICDATA *data) {
+	POSITION prechoice;
+	prechoice = choice;
+	while (true) {
+		if (_kbhit()) {
+			switch (_getch()) {
+				case 'a': case LEFT_ARROW:
+					if (choice.x != 0) {
+						prechoice = choice;
+						choice.x--;
+					}
+					break;
+				case 's': case DOWN_ARROW:
+					if (choice.y != 9) {
+						prechoice = choice;
+						choice.y++;
+					}
+					break;
+				case 'w': case UP_ARROW:
+					if (choice.y != 0) {
+						prechoice = choice;
+						choice.y--;
+					}
+					break;
+				case 'd': case RIGHT_ARROW:
+					if (choice.x != 1) {
+						prechoice = choice;
+						choice.x++;
+					}
+					break;
+				case enter:
+					return choice;
+			}
+		}
+ 		hoverClassicPlayerChoice(choice, prechoice, data);
+	}
+
+}
+
+int loadSaveClassicPlayer(CLASSICDATA *data, int playercount) {
+	if (playercount <= 0) {
+		gotoXY(28, 7);
+		cout << "Empty Data!";
+	} else {
+		drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, YELLOW);
+		POSITION choice = {0, 0};
+		textColorWithBackground(DARK_PINK, WHITE);
+		if (playercount <= 10) {
+			for (int i = 0; i < playercount; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].classicname;
+			}
+		}
+		if (playercount > 10 && playercount <= 20) {
+			for (int i = 0; i < 10; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].classicname;
+			}
+			for (int i = 10; i < playercount; i++) {
+				gotoXY(75, 7 + 2 * (i - 10));
+				cout << data[i].classicname;
+			}
+		}
+		if (playercount > 20) {
+			for (int i = 0; i < 10; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].classicname;
+			}
+			for (int i = 10; i < 20; i++) {
+				gotoXY(75, 7 + 2 * (i - 10));
+				cout << data[i].classicname;
+			}
+		}
+		textColorWithBackground(PURPLE, WHITE);
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.y].classicname;
+		choice = choseClassicPlayer(choice, data);
+		return choice.x * 10 + choice.y;
+	}
+
+}
+
+//time rush
+void hoverTimeRushPlayerChoice(POSITION choice, POSITION prechoice, TIMERUSHDATA *data) {
+	if (choice.y == prechoice.y && choice.x == prechoice.x) return;
+	textColorWithBackground(PURPLE, WHITE);
+	if (choice.x == 0) {
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.y].timerushname;
+	} else {
+		gotoXY(75, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.x * 10 + choice.y].timerushname;
+	}
+	textColorWithBackground(DARK_PINK, WHITE);
+	if (prechoice.x == 0) {
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << data[choice.y].timerushname << "   ";
+	} else {
+		gotoXY(75, 7 + 2 * choice.y);
+		cout << data[choice.x * 10 + choice.y].timerushname << "   ";
+	}
+}
+
+POSITION choseTimeRushPlayer(POSITION choice, TIMERUSHDATA *data) {
+	POSITION prechoice;
+	prechoice = choice;
+	while (true) {
+		if (_kbhit()) {
+			switch (_getch()) {
+				case 'a': case LEFT_ARROW:
+					if (choice.x != 0) {
+						prechoice = choice;
+						choice.x--;
+					}
+					break;
+				case 's': case DOWN_ARROW:
+					if (choice.y != 9) {
+						prechoice = choice;
+						choice.y++;
+					}
+					break;
+				case 'w': case UP_ARROW:
+					if (choice.y != 0) {
+						prechoice = choice;
+						choice.y--;
+					}
+					break;
+				case 'd': case RIGHT_ARROW:
+					if (choice.x != 1) {
+						prechoice = choice;
+						choice.x++;
+					}
+					break;
+			}
+		}
+ 		hoverTimeRushPlayerChoice(choice, prechoice, data);
+	}
+
+}
+
+int loadSaveTimeRushPlayer(TIMERUSHDATA *data, int playercount) {
+	if (playercount <= 0) {
+		gotoXY(28, 7);
+		cout << "Empty Data!";
+	} else {
+		drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, YELLOW);
+		POSITION choice = {0, 0};
+		textColorWithBackground(DARK_PINK, WHITE);
+		if (playercount <= 10) {
+			for (int i = 0; i < playercount; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].timerushname;
+			}
+		}
+		if (playercount > 10 && playercount <= 20) {
+			for (int i = 0; i < 10; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].timerushname;
+			}
+			for (int i = 10; i < playercount; i++) {
+				gotoXY(75, 7 + 2 * (i - 10));
+				cout << data[i].timerushname;
+			}
+		}
+		if (playercount > 20) {
+			for (int i = 0; i < 10; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].timerushname;
+			}
+			for (int i = 10; i < 20; i++) {
+				gotoXY(75, 7 + 2 * (i - 10));
+				cout << data[i].timerushname;
+			}
+		}
+		textColorWithBackground(PURPLE, WHITE);
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.y].timerushname;
+		choice = choseTimeRushPlayer(choice, data);
+		return choice.x * 10 + choice.y;
+	}
+
+}
+
+//infinite
+void hoverInfinitePlayerChoice(POSITION choice, POSITION prechoice, INFINITEDATA *data) {
+	if (choice.y == prechoice.y && choice.x == prechoice.x) return;
+	textColorWithBackground(PURPLE, WHITE);
+	if (choice.x == 0) {
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.y].infinitename;
+	} else {
+		gotoXY(75, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.x * 10 + choice.y].infinitename;
+	}
+	textColorWithBackground(DARK_PINK, WHITE);
+	if (prechoice.x == 0) {
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << data[choice.y].infinitename << "   ";
+	} else {
+		gotoXY(75, 7 + 2 * choice.y);
+		cout << data[choice.x * 10 + choice.y].infinitename << "   ";
+	}
+}
+
+POSITION choseInfinitePlayer(POSITION choice, INFINITEDATA *data) {
+	POSITION prechoice;
+	prechoice = choice;
+	while (true) {
+		if (_kbhit()) {
+			switch (_getch()) {
+				case 'a': case LEFT_ARROW:
+					if (choice.x != 0) {
+						prechoice = choice;
+						choice.x--;
+					}
+					break;
+				case 's': case DOWN_ARROW:
+					if (choice.y != 9) {
+						prechoice = choice;
+						choice.y++;
+					}
+					break;
+				case 'w': case UP_ARROW:
+					if (choice.y != 0) {
+						prechoice = choice;
+						choice.y--;
+					}
+					break;
+				case 'd': case RIGHT_ARROW:
+					if (choice.x != 1) {
+						prechoice = choice;
+						choice.x++;
+					}
+					break;
+			}
+		}
+ 		hoverInfinitePlayerChoice(choice, prechoice, data);
+	}
+
+}
+
+int loadSaveInfinitePlayer(INFINITEDATA *data, int playercount) {
+	if (playercount <= 0) {
+		gotoXY(28, 7);
+		cout << "Empty Data!";
+		cin.ignore();
+		return -1;
+	} else {
+		drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, YELLOW);
+		POSITION choice = {0, 0};
+		textColorWithBackground(DARK_PINK, WHITE);
+		if (playercount <= 10) {
+			for (int i = 0; i < playercount; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].infinitename;
+			}
+		}
+		if (playercount > 10 && playercount <= 20) {
+			for (int i = 0; i < 10; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].infinitename;
+			}
+			for (int i = 10; i < playercount; i++) {
+				gotoXY(75, 7 + 2 * (i - 10));
+				cout << data[i].infinitename;
+			}
+		}
+		if (playercount > 20) {
+			for (int i = 0; i < 10; i++) {
+				gotoXY(28, 7 + 2 * i);
+				cout << data[i].infinitename;
+			}
+			for (int i = 10; i < 20; i++) {
+				gotoXY(75, 7 + 2 * (i - 10));
+				cout << data[i].infinitename;
+			}
+		}
+		textColorWithBackground(PURPLE, WHITE);
+		gotoXY(28, 7 + 2 * choice.y);
+		cout << ">> " << data[choice.y].infinitename;
+		choice = choseInfinitePlayer(choice, data);
+		return choice.x * 10 + choice.y;
+	}
+}
+
+void gameOverSign() {
+	textColorWithBackground(PURPLE, WHITE);
+	gotoXY(51, 15);
+	cout << char(176) << char(177) << char(219) << char(223) << char(223) << char(219) << char(176) << char(219) << char(223) << char(223) << char(220) << char(176) << char(219) << char(223) << char(220) << char(223) << char(219) << char(176) << char(219) << char(223) << char(223) << char(176) << char(177) << char(219) << char(223) << char(223) << char(223) << char(219) << char(176) << char(220) << char(176) << char(176) << char(176) << char(220) << char(176) << char(219) << char(223) << char(223) << char(176) << char(219) << char(223) << char(223) << char(220);
+	gotoXY(51, 16);
+	cout << char(176) << char(177) << char(219) << char(176) << char(220) << char(220) << char(176) << char(219) << char(220) << char(220) << char(219) << char(176) << char(219) << char(176) << char(223) << char(176) << char(219) << char(176) << char(219) << char(223) << char(223) << char(176) << char(177) << char(219) << char(176) << char(176) << char(177) << char(219) << char(176) << char(176) << char(219) << char(220) << char(219) << char(176) << char(176) << char(219) << char(223) << char(223) << char(176) << char(219) << char(220) << char(220) << char(223);
+	gotoXY(51, 17);
+	cout << char(176) << char(177) << char(219) << char(220) << char(220) << char(223) << char(176) << char(223) << char(176) << char(176) << char(223) << char(176) << char(223) << char(176) << char(176) << char(177) << char(223) << char(176) << char(223) << char(223) << char(223) << char(176) << char(177) << char(219) << char(220) << char(220) << char(220) << char(219) << char(176) << char(176) << char(176) << char(223) << char(176) << char(176) << char(176) << char(223) << char(223) << char(223) << char(176) << char(223) << char(176) << char(223) << char(223);
+}
+
+string inputName() {
+	drawBoard(57, 14, 30, 4, DARK_GREEN);
+	gotoXY(60, 16);
+	cout << "Name: ";
+	textColorWithBackground(BLACK, WHITE);
+	string name;
+	getline(cin, name);
+	return name;
 }

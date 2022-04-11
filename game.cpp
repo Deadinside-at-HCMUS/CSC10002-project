@@ -2,12 +2,22 @@
 using namespace std;
 
 bool gameover;
+bool save;
 int charlock;
 int score;
 int foodnum;
 int stage;
 int speedcontrol;
+int gametime = 360;
 POSITION food;
+string name;
+int difficulty;
+int classic_player;
+CLASSICDATA *classic_data;
+int timerush_player;
+TIMERUSHDATA *timerush_data;
+int infinite_player;
+INFINITEDATA *infinite_data;
 SNAKE *snake = new SNAKE;
 enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN, STAY };
 eDirection dir, temp;
@@ -19,6 +29,7 @@ void gameSetup() {
 	srand(time(NULL));
 	score = 0;
 	gameover = false;
+	save = false;
 	foodnum = 1;
 	charlock = STOP;
 	snake->part = new POSITION[100];
@@ -66,7 +77,7 @@ void getDir() {
 	}
 }
 
-void moving() {
+void moving(int type) {
 	switch(dir) {
 		case LEFT:
 			snake->head.x--;
@@ -86,7 +97,7 @@ void moving() {
 
 		case STOP:
 			pauseGameBoard(60, 13);
-			pauseGameInput(60, 13);
+			pauseGameInput(60, 13, type);
 			dir = temp;
 			break;
 			
@@ -95,7 +106,7 @@ void moving() {
 	}
 }
 
-void pauseGameInput(int x, int y) {
+void pauseGameInput(int x, int y, int type) {
 	bool input = false;
 	while (input != true) {
 		if (_kbhit()) {
@@ -117,6 +128,34 @@ void pauseGameInput(int x, int y) {
 					input = true;
 					break;
 				case 's':
+					if (type == 1) {
+						CLASSICDATA player;
+						player.classicname = name;
+						player.difficulty = difficulty;
+						player.snake = snake;
+						player.score = score;
+						player.stage = stage;
+						classic_data = pushClassicData(classic_data, player, classic_player);
+						save = true;
+						gameover = true;
+					} else if (type == 2) {
+						TIMERUSHDATA player;
+						player.timerushname = name;
+						player.score = score;
+						player.stage = stage;
+						player.snake = snake;
+						timerush_data = pushTimeRushData(timerush_data, player, timerush_player);
+						save = true;
+						gameover = true;
+					} else {
+						INFINITEDATA player;
+						player.infinitename = name;
+						player.score = score;
+						player.snake = snake;
+						infinite_data = pushInfiniteData(infinite_data, player, infinite_player);
+						save = true;
+						gameover = true;
+					}
 					input = true;
 					break;
 				case 'x':
@@ -226,7 +265,7 @@ void checkSelfHitting(SNAKE *snake) {
 }
 
 // check eating food
-bool eatFood() {
+bool eatFood(POSITION food) {
 	if (snake->head.x == food.x && snake->head.y == food.y) return true;
     return false;
 }
@@ -296,7 +335,17 @@ void printFood(POSITION food) {
 	textColorWithBackground(DARK_YELLOW, WHITE);
 	gotoXY(food.x, food.y);
 	if (!isFoodInBush(food)) {
-		cout << char(254);
+		cout << char(FOOD);
+	} else {
+		cout << char(map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0]);
+	}
+}
+
+void printTimeFood(POSITION timefood) {
+	textColorWithBackground(PURPLE, WHITE);
+	gotoXY(timefood.x, timefood.y);
+	if (!isFoodInBush(timefood)) {
+		cout << char(TIME_FOOD);
 	} else {
 		cout << char(map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0]);
 	}
@@ -343,7 +392,7 @@ void castMap1() {
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 20; j++) {
 			map[i + 4][j + 16][0] = BLOCK;
-			map[i + 4][j + 16][1] = BLACK;
+			map[i + 4][j + 16][1] = GREY;
 		}
 	}
 	for (int i = 0; i < 5; i++) {
@@ -729,9 +778,6 @@ void castMap5() {
 	}
 }
 
-void castBonusRound() {
-
-}
 void printMap() {
 	for (int i = 0; i < PLAY_SCREEN_WIDTH; i++) {
 		for (int j = 0; j < PLAY_SCREEN_LENGTH; j++) {
@@ -886,7 +932,7 @@ void renderNewStage(int &gatecount, int &maxpoint, bool &cleargate) {
 	
 }
 
-void snakeDisappear(POSITION head) {
+void snakeDisappear(POSITION head, int speedcontrol) {
 	int temp = 0;
 	while (!getInGate(snake->part[snake->size - 1])) {
 		renderSnake(head);
@@ -904,7 +950,7 @@ void snakeDisappear(POSITION head) {
 			}
 
 		}
-		Sleep(100);
+		Sleep(speedcontrol);
 		temp++;
 	}
 
@@ -926,10 +972,75 @@ void resetSpeed() {
 		cout << "MAX";
 }
 
+// load data into game play
+void loadClassicDataIntoGame(CLASSICDATA data) {
+	dir = STAY;
+	score = data.score;
+	gameover = false;
+	save = false;
+	charlock = STOP;
+	difficulty = data.difficulty;
+	snake->part = new POSITION[100];
+	snake->head = data.snake->head;
+	snake->size = data.snake->size;
+	for (int i = 0; i < snake->size; i++) {
+		snake->part[i] = data.snake->part[i];
+	}
+	stage = data.stage;
+}
+
+void loadTimeRushDataIntoGame(TIMERUSHDATA data) {
+	dir = STAY;
+	score = data.score;
+	gameover = false;
+	save = false;
+	charlock = STOP;
+	difficulty = data.difficulty;
+	gametime = data.time;
+	snake->part = new POSITION[100];
+	snake->head = data.snake->head;
+	snake->size = data.snake->size;
+	for (int i = 0; i < snake->size; i++) {
+		snake->part[i] = data.snake->part[i];
+	}
+	stage = data.stage;
+}
+
+void loadInfiniteDataIntoGame(INFINITEDATA data) {
+	dir = STAY;
+	score = data.score;
+	gameover = false;
+	save = false;
+	charlock = STOP;
+	snake->part = new POSITION[100];
+	snake->head = data.snake->head;
+	snake->size = data.snake->size;
+	for (int i = 0; i < snake->size; i++) {
+		snake->part[i] = data.snake->part[i];
+	}
+}
+
 // create new game
-void newClassicGame() {
+void newClassicGame(int difficulty) {
+	//gotoXY(1, 1);
+	//textColorWithBackground(BLACK, WHITE);
+	//cout << "i'm here";
+	//system("pause");
+	switch (difficulty) {
+		case 0:
+			speedcontrol = 200;
+			break;
+		case 1:
+			speedcontrol = 90;
+			break;
+		case 2:
+			speedcontrol = 30;
+			break;
+		default:
+			break;
+	}
+	drawBlank(27, 6, 89, 19);
 	stage = 1;
-	gameSetup();
 	graphSet(stage, snake);
 	generateFood(foodnum, food);
 	printFood(food);
@@ -942,7 +1053,7 @@ void newClassicGame() {
 		temp = dir;
 		clearTail();
 		getDir();
-		moving();
+		moving(1);
 		if (snake->size > 1 && !getInGate(snake->head)) checkSelfHitting(snake);
 		checkCollisionBoard(snake);
 		checkCollisionObstacles(snake);
@@ -951,10 +1062,10 @@ void newClassicGame() {
 			gatecount++;
 		} else if (score == maxpoint && gatecount == 1) {
 			if (getInGate(snake->head) == true)  {
-				snakeDisappear(snake->head);
+				snakeDisappear(snake->head, speedcontrol);
 				renderNewStage(gatecount, maxpoint, cleargate);
 			}
-		} else if (eatFood() == true) {
+		} else if (eatFood(food) == true) {
 			score += 10;
 			resetScore();
 			clearFood(food);
@@ -975,9 +1086,9 @@ void newClassicGame() {
 		}
 		renderSnake(snake->head);
 		printSnake(snake);
-		Sleep(100);
+		Sleep(speedcontrol);
 	}
-	DeathEffect(snake);
+	if (save == false) deathEffect(snake);
 	drawBoard(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH, PURPLE);
 	for (int i = 0; i < 25; i++) {
 		gotoXY(0, i);
@@ -986,11 +1097,59 @@ void newClassicGame() {
 	dir = STOP;
 }
 
-void newTimeRushGame() {
-	castMapBase();
+void newTimeRushGame(int stage) {
+	loadTimeRushFile(timerush_data, timerush_player);
+	drawBlank(27, 6, 89, 19);
+	POSITION timefood;
+	graphSet(stage, snake);
+	generateFood(foodnum, food);
+	printFood(food);
+	generateTimeFood(foodnum, timefood);
+	printTimeFood(timefood);
+	
+	while (!gameover) {
+		temp = dir;
+		clearTail();
+		getDir();
+		moving(2);
+		if (snake->size > 1 && !getInGate(snake->head)) checkSelfHitting(snake);
+		checkCollisionBoard(snake);
+		checkCollisionObstacles(snake);
+		if (eatFood(food) == true) {
+			score += 10;
+			resetScore();
+			clearFood(food);
+			generateFood(foodnum, food);
+			printFood(food);
+			generatePart(snake);
+		}
+		if (eatFood(timefood) == true) {
+			if (gametime > 310) {
+				gametime = 360;
+			} else {
+				gametime += 50;
+			}
+			clearFood(timefood);
+			generateTimeFood(foodnum, timefood);
+			printTimeFood(timefood);
+		}
+		renderSnake(snake->head);
+		printSnake(snake);
+		gametime--;
+		renderTimeRush(snake, gametime);
+		Sleep(100);
+	}
+	if (save == false) deathEffect(snake);
+	drawBoard(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH, PURPLE);
+	for (int i = 0; i < 25; i++) {
+		gotoXY(0, i);
+		cout << ' ';
+	}
+	dir = STOP;
 }
 
 void newInfiniteGame() {
+	loadInfiniteFile(infinite_data, infinite_player);
 	castMapBase();
 	textColorWithBackground(PURPLE, WHITE);
 	drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
@@ -1010,10 +1169,10 @@ void newInfiniteGame() {
 	while (!gameover) {
 		clearTail();
 		getDir();
-		moving();
+		moving(3);
 		if (snake->size > 1) checkSelfHitting(snake);
 		swapSide();
-		if (eatFood() == true) {
+		if (eatFood(food) == true) {
 			score += 10;
 			if (speedcontrol < 14) speedcontrol++;
 			resetScore();
@@ -1028,8 +1187,105 @@ void newInfiniteGame() {
 		printSnake(snake);
 		Sleep(150 - speedcontrol * 10);
 	}
-	DeathEffect(snake);
+	deathEffect(snake);
 	textColorWithBackground(PURPLE, WHITE);
 	drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
 	dir = STOP;
+}
+
+void openGame() {
+	setlocale(LC_CTYPE, ".OCP");
+	fixConsoleWindow();
+	noCursorType();
+	changeConsoleColor(WHITE);
+	//loading();
+	while (true) {
+		mainMenu();
+		POSITION choice = inputMainMenu();
+		if (choice.x == 0 && choice.y == 0) {
+			system("cls");
+			playMenu();
+			POSITION sub_choice = inputPlayMenu();
+			if (sub_choice.y == 0) {
+				POSITION minichoice = subChoiceMenu();
+				if (minichoice.y == 0) {
+					difficulty = choseDifficulty();
+					drawBlank(40, 11, 40, 9);
+					name = inputName();
+					gameSetup();
+				} else {
+					loadClassicFile(classic_data, classic_player);
+					gotoXY(1, 1);
+					textColorWithBackground(BLACK, WHITE);
+					int idx = loadSaveClassicPlayer(classic_data, classic_player);
+					loadClassicDataIntoGame(classic_data[idx]);
+				}
+				// che do choi classic
+				infoBoard(1, 5);
+				infoSet(1);
+				newClassicGame(difficulty);
+				textColorWithBackground(CYAN, WHITE);
+				drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+				drawBlank(27, 6, 89, 19);
+				gameOverSign();
+				cin.ignore();  
+
+			} else if (sub_choice.y == 1) {
+				POSITION minichoice = subChoiceMenu();
+				if (minichoice.y == 0) {
+					difficulty = choseDifficulty();
+					drawBlank(40, 11, 40, 9);
+					name = inputName();
+					gameSetup();
+				}
+				else {
+					loadTimeRushFile(timerush_data, timerush_player);
+					gotoXY(1, 1);
+					textColorWithBackground(BLACK, WHITE);
+					cout << timerush_player;
+					cout << timerush_data[0].timerushname << ' ' << timerush_data[0].score << ' ';
+					system("pause");
+					int idx = loadSaveTimeRushPlayer(timerush_data, timerush_player);
+					loadTimeRushDataIntoGame(timerush_data[idx]);
+				}
+				// che do choi time rush
+				infoBoard(1, 5);
+				infoSet(1);
+				newTimeRushGame(inputTimeChoice());
+				cin.ignore();
+				drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+				drawBlank(27, 6, 89, 19);
+				gameOverSign();
+				cin.ignore();
+			} else {
+				//che do choi infinitie
+				drawBlank(1, 5, INFO_BOARD_LENGTH, INFO_BOARD_WIDTH);
+				textColorWithBackground(PURPLE, WHITE);
+				drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
+				infoSet(3);
+				newInfiniteGame();
+				drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+				drawBlank(27, 6, 89, 19);
+				gameOverSign();
+				cin.ignore();
+			}
+		}
+		else if (choice.x == 1 && choice.y == 0) {
+			gameTurtorial();
+			cin.ignore();
+		}
+		else if (choice.x == 0 && choice.y == 1) {
+			aboutUs();
+			cin.ignore();
+		}
+		else {
+			saveClassicFile(classic_data, classic_player);
+			freeClassicData(classic_data, classic_player);
+			saveInfiniteFile(infinite_data, infinite_player);
+			freeInfiniteData(infinite_data, infinite_player);
+			saveTimeRushFile(timerush_data, timerush_player);
+			freeTimeRushData(timerush_data, timerush_player);
+			break;
+		}
+	}
 }

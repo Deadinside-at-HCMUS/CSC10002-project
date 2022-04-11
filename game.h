@@ -14,12 +14,14 @@ bool isValidFood(int x, int y);
 
 bool isValidGate(int x, int y, int type);
 
-bool eatFood();
+bool eatFood(POSITION food);
 
-void pauseGameInput(int x, int y);
+void pauseGameInput(int x, int y, int type);
 
 // create game
-void newClassicGame();
+void newClassicGame(int difficulty);
+
+void newTimeRushGame(int stage);
 
 void newInfiniteGame();
 
@@ -30,4 +32,6 @@ void printSnake(SNAKE *snake);
 
 void printFood(POSITION food);
 
+//open game
+void openGame();
 #endif // GAME

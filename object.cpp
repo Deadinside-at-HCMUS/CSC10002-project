@@ -19,6 +19,17 @@ void generateFood(int foodnum, POSITION &food) {
 	food = {x, y};
 }
 
+void generateTimeFood(int foodnum, POSITION &food) {
+	int x = 0, y = 0;
+	for (int i = 0; i < foodnum; ++i) {
+		do {
+			x = rand() % (PLAY_SCREEN_LENGTH - 2)+ (LEFT_SIDE_X + 1);
+			y = rand() % (PLAY_SCREEN_WIDTH - 2) + (TOP_SIDE_Y + 1);
+		} while (isValidFood(x, y) == false);
+	}
+	food = {x, y};
+}
+
 void removeFood(POSITION &food) {
 	food.x = 0;
 	food.y = 0;

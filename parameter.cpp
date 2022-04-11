@@ -64,14 +64,3 @@ void drawChar(int x, int y, int color, int character) {
 	cout << char(character);
 
 }
-
-// exit game
-//void exitGame(HANDLE t) {
-//	system("cls");
-//	TerminateThread(t, 0);
-//}
-
-// pause game
-//void pauseGame(HANDLE t) {
-//	SuspendThread(t);
-//}

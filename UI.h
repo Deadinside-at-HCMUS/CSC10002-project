@@ -39,11 +39,11 @@ void drawChoiceBox(int x, int y, int length, int width);
 
 void drawBlank(int x, int y, int length, int width);
 
-void gameOverSign();
-
-void DeathEffect(SNAKE* snake);
+void deathEffect(SNAKE* snake);
 
 void pauseGameBoard(int x, int y);
+
+void gameOverSign();
 
 // menu function
 
@@ -59,6 +59,8 @@ void playMenu();
 
 POSITION inputPlayMenu();
 
+int inputTimeChoice();
+
 void inputMenuBoxEffect(POSITION choice, int color);
 
 void inputPlayBoxEffect(POSITION choice, int color);
@@ -71,5 +73,19 @@ void gameTurtorial();
 
 void aboutUs();
 
+void renderTimeRush(SNAKE *snake, int& time);
+
+POSITION subChoiceMenu();
+
+int choseDifficulty();
+
+string inputName();
+
+// load input
+int loadSaveClassicPlayer(CLASSICDATA *data, int playercount);
+
+int loadSaveTimeRushPlayer(TIMERUSHDATA *data, int playercount);
+
+int loadSaveInfinitePlayer(INFINITEDATA *data, int playercount);
 
 #endif // UI

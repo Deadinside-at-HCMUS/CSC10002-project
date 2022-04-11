@@ -1,0 +1,14 @@
+1
+Player: thien
+Stage: 1
+Score: 10
+Difficulty: 0
+Head: 81 14
+Part: 81 15, 81 16.
+
+Player: hi huu
+Stage: 2
+Score: 10
+Difficulty: 0
+Head: 81 14
+Part: 81 15, 81 16.
