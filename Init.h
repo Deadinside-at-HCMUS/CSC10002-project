@@ -17,5 +17,7 @@
 #include "game.h"
 #include "UI.h"
 #include "SaveAndLoad.h"
+#pragma comment (lib, "winmm.lib")
+
 
 #endif // INIT

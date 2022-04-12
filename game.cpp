@@ -1113,6 +1113,7 @@ void newClassicGame(int difficulty) {
 				renderNewStage(gatecount, maxpoint, cleargate);
 			}
 		} else if (eatFood(food) == true) {
+			PlaySound(TEXT("EatFruit.wav"), NULL, SND_ASYNC | SND_FILENAME);
 			score += 10;
 			resetScore();
 			clearFood(food);
@@ -1183,6 +1184,7 @@ void newTimeRushGame(int stage, int difficulty) {
 			generatePart(snake);
 		}
 		if (eatFood(timefood) == true) {
+			PlaySound(TEXT("EatFruit.wav"), NULL, SND_ASYNC | SND_FILENAME);
 			if (gametime > 310) {
 				gametime = 360;
 			} else {
@@ -1231,6 +1233,7 @@ void newInfiniteGame() {
 		if (snake->size > 1) checkSelfHitting(snake);
 		swapSide();
 		if (eatFood(food) == true) {
+			PlaySound(TEXT("EatFruit.wav"), NULL, SND_ASYNC | SND_FILENAME);
 			score += 10;
 			if (speedcontrol < 14) speedcontrol++;
 			resetScore();
@@ -1288,8 +1291,9 @@ void openGame() {
 						textColorWithBackground(CYAN, WHITE);
 						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
 						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
 						gameOverSign();
-						Sleep(1000);
+						Sleep(2000);
 					}
 				} else {
 					gameSetup();
@@ -1305,8 +1309,9 @@ void openGame() {
 						textColorWithBackground(CYAN, WHITE);
 						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
 						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
 						gameOverSign();
-						Sleep(1000);
+						Sleep(2000);
 					}
 				}
 
@@ -1329,8 +1334,9 @@ void openGame() {
 						newTimeRushGame(inputTimeChoice(), difficulty);
 						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
 						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
 						gameOverSign();
-						Sleep(1000);
+						Sleep(2000);
 					}
 				} else {
 					gameSetup();
@@ -1344,8 +1350,9 @@ void openGame() {
 						newTimeRushGame(stage, difficulty);
 						drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
 						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
 						gameOverSign();
-						Sleep(1000);
+						Sleep(2000);
 					}
 				}
 			} else {
@@ -1362,8 +1369,9 @@ void openGame() {
 					newInfiniteGame();
 					drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
 					drawBlank(27, 6, 89, 19);
+					PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
 					gameOverSign();
-					Sleep(1000);
+					Sleep(2000);
 				} else {
 					gameSetup();
 					infoSet(3);
@@ -1376,9 +1384,10 @@ void openGame() {
 						newInfiniteGame();
 						drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
 						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
 						gameOverSign();
 					}
-					Sleep(1000);
+					Sleep(2000);
 				}
 
 			}
