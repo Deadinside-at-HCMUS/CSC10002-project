@@ -38,8 +38,8 @@ struct CLASSICDATA {
 struct TIMERUSHDATA {
 	string timerushname;
 	int score;
-	int stage;
 	int difficulty;
+	int stage;
 	int time;
 	SNAKE *snake;
 };

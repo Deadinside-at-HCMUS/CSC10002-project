@@ -210,13 +210,6 @@ void loadTimeRushFile(TIMERUSHDATA*& data, int& playercount) {
     fIn.close();
 }
 
-void moveTimeRushData(TIMERUSHDATA* des, TIMERUSHDATA* src, int playercount) {
-    if (src == nullptr || des == nullptr) return;
-    for (int i = 0; i < playercount; i++) {
-        des[i] = src[i];
-    }
-}
-
 TIMERUSHDATA* pushTimeRushData(TIMERUSHDATA* data, TIMERUSHDATA player, int& playercount) {
     TIMERUSHDATA* temp = new TIMERUSHDATA[playercount + 1];
     if (data != nullptr) {

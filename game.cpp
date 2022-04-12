@@ -99,7 +99,6 @@ void moving(int type) {
 		case STOP:
 			pauseGameBoard(60, 13);
 			pauseGameInput(60, 13, type);
-			dir = temp;
 			break;
 			
 		default:
@@ -126,6 +125,8 @@ void pauseGameInput(int x, int y, int type) {
 					}
 					printSnake(snake);
 					printFood(food);
+					dir = temp;
+					moving(1);
 					input = true;
 					break;
 				case 's':
@@ -1097,9 +1098,9 @@ void newClassicGame(int difficulty) {
 
 	while (!gameover) {
 		temp = dir;
-		clearTail();
 		getDir();
 		moving(1);
+		clearTail();
 		if (snake->size > 1 && !getInGate(snake->head)) checkSelfHitting(snake);
 		checkCollisionBoard(snake);
 		checkCollisionObstacles(snake);
@@ -1167,9 +1168,9 @@ void newTimeRushGame(int stage, int difficulty) {
 	
 	while (!gameover) {
 		temp = dir;
-		clearTail();
 		getDir();
 		moving(2);
+		clearTail();
 		if (snake->size > 1 && !getInGate(snake->head)) checkSelfHitting(snake);
 		checkCollisionBoard(snake);
 		checkCollisionObstacles(snake);
@@ -1224,9 +1225,9 @@ void newInfiniteGame() {
 	printFood(food);
 
 	while (!gameover) {
-		clearTail();
 		getDir();
 		moving(3);
+		clearTail();
 		if (snake->size > 1) checkSelfHitting(snake);
 		swapSide();
 		if (eatFood(food) == true) {
@@ -1317,6 +1318,7 @@ void openGame() {
 				} else if (minichoice.y == 0) {
 					difficulty = choseDifficulty();
 					if (difficulty != -1) {
+						gametime = 360;
 						drawBlank(40, 11, 40, 9);
 						name = inputName();
 						gameSetup();
@@ -1375,9 +1377,8 @@ void openGame() {
 						drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
 						drawBlank(27, 6, 89, 19);
 						gameOverSign();
-						Sleep(1000);
 					}
-					
+					Sleep(1000);
 				}
 
 			}

@@ -216,7 +216,7 @@ POSITION inputMainMenu() {
 					inputMenuBoxEffect(choice, DARK_RED);
 				}
 				break;
-			case enter:
+			case ENTER:
 				return choice;
 			}
 		}
@@ -315,42 +315,14 @@ POSITION inputPlayMenu() {
 					inputPlayBoxEffect(choice, DARK_RED);
 				}
 				break;
-			case esc:
+			case ESC:
 				choice.x = 1;
 				return choice;
-			case enter:
+			case ENTER:
 				return choice;
 			}
 		}
 	}
-}
-
-int inputTimeChoice() {
-	drawBlank(57, 9, 30, 9);
-	drawBoard(57, 9, 30, 9, PINK);
-	gotoXY(67, 11);
-	cout << "[1] Map 1";
-	gotoXY(67, 12);
-	cout << "[2] Map 2";
-	gotoXY(67, 13);
-	cout << "[3] Map 3";
-	gotoXY(67, 14);
-	cout << "[4] Map 4";
-	gotoXY(67, 15);
-	cout << "[5] Map 5";
-	drawBoard(57, 18, 30, 4, PINK);
-	gotoXY(57, 18);
-	for (int i = 0; i < 31; i++) {
-		cout << char(BLOCK);
-	}
-	gotoXY(66, 20);
-	cout << "Chose a map: ";
-	int choice;
-	cin >> choice;
-	choice = choice % 5;
-	if (choice == 0) choice = 5;
-	return choice;
-
 }
 
 void infoBoard(int x, int y) {
@@ -429,22 +401,22 @@ void gameTurtorial() {
 
 void aboutUs() {
 	system("cls");
-	drawBoard(20, 6, 78, 11, DARK_GREEN);
+	drawBoard(21, 6, 78, 11, DARK_GREEN);
 
 	textColorWithBackground(DARK_YELLOW, WHITE);
-	gotoXY(30, 8);
+	gotoXY(31, 8);
 	cout << "Snake Game Project - Programming Technique - Class: 21CLC07" << endl;
-	gotoXY(40, 9);
+	gotoXY(41, 9);
 	cout << "Supporting Teacher: Mr.Truong Toan Thinh" << endl;
-	gotoXY(55, 11);
+	gotoXY(56, 11);
 	cout << "Group 6:" << endl;
-	gotoXY(45, 12);
+	gotoXY(46, 12);
 	cout << "21127294 - Nguyen Hi Huu" << endl;
-	gotoXY(45, 13);
+	gotoXY(46, 13);
 	cout << "21127419 - Ngo Phuoc Tai" << endl;
-	gotoXY(45, 14);
+	gotoXY(46, 14);
 	cout << "21127175 - Le Anh Thu" << endl;
-	gotoXY(45, 15);
+	gotoXY(46, 15);
 	cout << "21127693 - Huynh Duc Thien" << endl;
 
 }
@@ -599,6 +571,34 @@ void pauseGameBoard(int x, int y) {
 
 }
 
+int inputTimeChoice() {
+	drawBlank(57, 9, 30, 9);
+	drawBoard(57, 9, 30, 9, PINK);
+	gotoXY(67, 11);
+	cout << "[1] Map 1";
+	gotoXY(67, 12);
+	cout << "[2] Map 2";
+	gotoXY(67, 13);
+	cout << "[3] Map 3";
+	gotoXY(67, 14);
+	cout << "[4] Map 4";
+	gotoXY(67, 15);
+	cout << "[5] Map 5";
+	drawBoard(57, 18, 30, 4, PINK);
+	gotoXY(57, 18);
+	for (int i = 0; i < 31; i++) {
+		cout << char(BLOCK);
+	}
+	gotoXY(66, 20);
+	cout << "Chose a map: ";
+	int choice;
+	cin >> choice;
+	choice = choice % 5;
+	if (choice == 0) choice = 5;
+	return choice;
+
+}
+
 void renderTimeRush(SNAKE *snake, int& time) {
 	textColorWithBackground(BLUE, WHITE);
 	gotoXY(3, 15);
@@ -696,10 +696,10 @@ POSITION inputSubChoiceMenu() {
 					inputSubChoiceEffect(choice, DARK_RED);
 				}
 				break;
-			case esc:
+			case ESC:
 				choice.x = 1;
 				return choice;
-			case enter:
+			case ENTER:
 				return choice;
 			}
 		}
@@ -759,11 +759,11 @@ POSITION inputInfiniteSubChoiceMenu() {
 					inputInfiniteSubChoiceEffect(choice, DARK_RED);
 				}
 				break;
-			case esc:
+			case ESC:
 				choice.x = 1;
 				return choice;
 
-			case enter:
+			case ENTER:
 				return choice;
 			}
 		}
@@ -786,7 +786,7 @@ POSITION infiniteSubChoiceMenu() {
 }
 
 //difficulty
-void hoverDifficultyyChoice(int choice, int prechoice) {
+void hoverDifficultyChoice(int choice, int prechoice) {
 	textColorWithBackground(PURPLE, WHITE);
 	switch (choice) {
 		case 0:
@@ -837,13 +837,13 @@ int inputDifficultyChoice(int choice) {
 						choice--;
 					}
 					break;
-				case esc:
+				case ESC:
 					return -1;
-				case enter:
+				case ENTER:
 					return choice;
 			}
 		}
-		hoverDifficultyyChoice(choice, prechoice);
+		hoverDifficultyChoice(choice, prechoice);
 	}
 
 }
@@ -917,9 +917,9 @@ int choseClassicPlayer(int choice, CLASSICDATA *data, int playercount) {
 						choice--;
 					}
 					break;
-				case esc:
+				case ESC:
 					return -1;
-				case enter:
+				case ENTER:
 					return choice;
 			}
 		}
@@ -1062,9 +1062,9 @@ int choseTimeRushPlayer(int choice, TIMERUSHDATA* data, int playercount) {
 					choice--;
 				}
 				break;
-			case esc:
+			case ESC:
 				return -1;
-			case enter:
+			case ENTER:
 				return choice;
 			}
 		}
@@ -1191,9 +1191,9 @@ int choseInfinitePlayer(int choice, INFINITEDATA *data, int playercount) {
 						choice--;
 					}
 					break;
-				case esc:
+				case ESC:
 					return -1;
-				case enter:
+				case ENTER:
 					return choice;
 			}
 		}
