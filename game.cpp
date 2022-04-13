@@ -21,7 +21,7 @@ INFINITEDATA *infinite_data;
 SNAKE *snake = new SNAKE;
 enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN, STAY };
 eDirection dir, temp;
-const char* stid = "21127175211272942112741921127693-21127175211272942112741921127693-21127175211272942112741921127693";
+const char* stid = "21127175211272942112741921127693";
 int map[PLAY_SCREEN_WIDTH][PLAY_SCREEN_LENGTH][2] {};
 
 void gameSetup() {
@@ -923,8 +923,8 @@ void renderNewStage(int &gatecount, int &maxpoint, bool &cleargate) {
 	POSITION temp;
 	temp = snake->head;
 	drawBlank(27, 6, 89, 19);
-	stage++;
 	graphSet(stage % 5 + 1, snake);
+	stage++;
 	gatecount = 0;
 	maxpoint += 100;
 	desGate(stage % 5 + 1);
@@ -1123,7 +1123,7 @@ void newClassicGame(int difficulty) {
 			} else {
 				removeFood(food);
 			}
-			generatePart(snake);
+			if (snake->size < 32) generatePart(snake);
 		}
 		if (cleargate == false) {
 			removeDesGate(stage % 5 + 1, cleargate);
@@ -1181,7 +1181,7 @@ void newTimeRushGame(int stage, int difficulty) {
 			clearFood(food);
 			generateFood(foodnum, food);
 			printFood(food);
-			generatePart(snake);
+			if (snake->size < 32) generatePart(snake);
 		}
 		if (eatFood(timefood) == true) {
 			PlaySound(TEXT("EatFruit.wav"), NULL, SND_ASYNC | SND_FILENAME);
@@ -1242,7 +1242,7 @@ void newInfiniteGame() {
 			generateFood(foodnum, food);
 			textColorWithBackground(BLACK, WHITE);
 			printFood(food);
-			generatePart(snake);
+			if (snake->size < 32) generatePart(snake);
 		}
 		renderSnake(snake->head);
 		printSnake(snake);
@@ -1259,7 +1259,7 @@ void openGame() {
 	fixConsoleWindow();
 	noCursorType();
 	changeConsoleColor(WHITE);
-	//loading();
+	loading();
 	loadClassicFile(classic_data, classic_player);
 	loadTimeRushFile(timerush_data, timerush_player);
 	loadInfiniteFile(infinite_data, infinite_player);

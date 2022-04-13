@@ -1,5 +1,5 @@
 3
-Player: thien choi game
+Player: anh thu
 Stage: 1
 Score: 130
 Time: 360
