@@ -1,48 +1,65 @@
 #pragma once
+#ifndef OBJECT
+#define OBJECT
+#include <string>
+using namespace std;
+#define UPPER_BLOCK 223
+#define BOTTOM_BLOCK 220
+#define BLOCK 219
+#define BUSH_LV1 176
+#define BUSH_LV2 177
+#define BUSH_LV3 178
+#define FOOD 254
+#define TIME_FOOD 235
 
-#ifndef _OBJECT_
-#define _OBJECT_
-
-struct POS {
+// struct
+struct POSITION {
 	int x;
 	int y;
-	char c;
+
 };
 
+// snake
 struct SNAKE {
-	POS* body;
-	int length;
-	int dir;
-	int tmpDir;
-	bool prevEat;
-	int speed;
-	bool haveGate;
-	int vt;
+	POSITION head;
+	POSITION *part;
+	int size;
 };
 
-struct GAMEOBJECT {
-	SNAKE* snake;
-	POS* fruit;
-	POS* gate;
+// player
+struct CLASSICDATA {
+	string classicname;
+	int score;
+	int difficulty;
+	int stage;
+	SNAKE *snake;
 };
 
-GAMEOBJECT* initGameObject();
-SNAKE* initSnake();
-void generateFruit(SNAKE* snake, POS* fruit, POS* gate);
-POS* generateGate(SNAKE* snake);
-void deleteGameObject(GAMEOBJECT* gameObject);
+struct TIMERUSHDATA {
+	string timerushname;
+	int score;
+	int difficulty;
+	int stage;
+	int time;
+	SNAKE *snake;
+};
 
-void renderSnake(SNAKE* snake);
-void renderFruit(POS* fruit);
-void renderGate(POS* gate);
-void renderGate(POS* gate, char c);
-void DeathEffect(SNAKE* snake);
-
-void pushTopTail(SNAKE* snake, POS* newTail);
-bool checkCollision(SNAKE* snake, POS* gate);//Kiem tra va cham
-void enterGate(SNAKE* snake, POS* gate);
-void newLevel(SNAKE* snake);
-
-#endif // !_OBJECT_
+struct INFINITEDATA {
+	string infinitename;
+	int score;
+	SNAKE *snake;
+};
 
 
+// support function
+void generatePart(SNAKE *snake);
+
+void generateFood(int foodnum, POSITION &food);
+
+void generateTimeFood(int foodnum, POSITION &food);
+
+void generateGate(int map[22][92][2]);
+
+void removeFood(POSITION &food);
+
+#endif // OBJECT

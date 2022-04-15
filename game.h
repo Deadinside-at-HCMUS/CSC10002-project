@@ -1,28 +1,37 @@
 #pragma once
+#ifndef GAME
+#define GAME
 
-#ifndef _GAME_
-#define _GAME_
+// game setting
+#define MAX_SPEED 20
+#define MAX_LENGTH 20
+#define GATE_SPOT 3001
 
-#include "parameter.h"
-#include "saveandload.h"
-#include <mmsystem.h>	//thu vien chen nhac
+// game function
+void gameSetup();
 
-#pragma comment (lib, "winmm.lib")
+bool isValidFood(int x, int y);
 
-/***************Cac ham tao giao dien game***************/
-void DrawBoard(int x, int y, int width, int height);
-void OpenGame();
-void Loading();
-void Option(int option1, int option2);
-void Menu();
-void NewGame();
-void NewGame(GAMEOBJECT* gameObject);
-bool Input(GAMEOBJECT* gameObject);
-void Update(GAMEOBJECT* gameObject);
-void Render(GAMEOBJECT* gameObject);
-bool EndGame(SNAKE* snake);		//xu ly ket thuc game
-void GuideTable();	//bang huong dan choi game
+bool isValidGate(int x, int y, int type);
 
-#endif // !_GAME_
+bool eatFood(POSITION food);
 
+void pauseGameInput(int x, int y, int type);
 
+// create game
+void newClassicGame(int difficulty);
+
+void newTimeRushGame(int stage, int difficulty);
+
+void newInfiniteGame();
+
+// art
+void printGate(int x, int y, int type);
+
+void printSnake(SNAKE *snake);
+
+void printFood(POSITION food);
+
+//open game
+void openGame();
+#endif // GAME

@@ -1,511 +1,1413 @@
-#include "game.h"
+#include "Init.h"
+using namespace std;
 
-void DrawBoard(int x, int y, int width, int height)
-{
-	GotoXY(x, y);
-	cout << static_cast<char>(220);
-	for (int i = 1; i < width; i++)
-		cout << static_cast<char>(220);
-	cout << static_cast<char>(220);
-	GotoXY(x, height + y);
-	cout << static_cast<char>(223);
-	for (int i = 0; i < width; i++)
-		cout << static_cast<char>(223);
+bool gameover;
+bool save;
+int charlock;
+int score;
+int foodnum;
+int stage;
+int speedcontrol;
+int gametime = 360;
+POSITION food;
+string name;
+int difficulty;
+int classic_player;
+CLASSICDATA *classic_data;
+int timerush_player;
+TIMERUSHDATA *timerush_data;
+int infinite_player;
+INFINITEDATA *infinite_data;
+SNAKE *snake = new SNAKE;
+enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN, STAY };
+eDirection dir, temp;
+const char* stid = "21127175211272942112741921127693";
+int map[PLAY_SCREEN_WIDTH][PLAY_SCREEN_LENGTH][2] {};
 
-	for (int i = y + 1; i < height + y; i++)
-	{
-		GotoXY(x, i);
-		cout << static_cast<char>(219);
-		GotoXY(x + width, i);
-		cout << static_cast<char>(219);
-	}
+void gameSetup() {
+	dir = STAY;
+	srand(time(NULL));
+	score = 0;
+	gameover = false;
+	save = false;
+	foodnum = 1;
+	stage = 1;
+	charlock = STOP;
+	snake->part = new POSITION[100];
+	snake->head = {(RIGHT_SIDE_X + LEFT_SIDE_X) / 2, (BOTTOM_SIDE_Y + TOP_SIDE_Y) / 2};
+	snake->part[0].y = snake->head.y;
+	snake->part[0].x = snake->head.x + 1;
+	snake->size = 1;
 }
 
-void Loading() {
-	TextColor(12);
-	GotoXY(25, 12);
-	cout << "*      *****   ***   ****   *****  *   *   ***          ";
-	TextColor(13);
-	GotoXY(25, 13);
-	cout << "*      *   *  *   *  *   *    *    **  *  *             ";
-	TextColor(9);
-	GotoXY(25, 14);
-	cout << "*      *   *  *****  *   *    *    * * *  *  **         ";
-	TextColor(15);
-	GotoXY(25, 15);
-	cout << "*      *   *  *   *  *   *    *    *  **  *   *         ";
-	TextColor(11);
-	GotoXY(25, 16);
-	cout << "*****  *****  *   *  ****   *****  *   *   ***   * * * *";
-	for (int i = 1; i <= 80; i++)
-	{
-		TextColor(202);
-		GotoXY(i + 5, 22);
-		cout << char(219);
-		TextColor(202);
-		GotoXY(i + 5, 23);
-		cout << char(219);
-		Sleep(25);
-	}
-	TextColor(7);
-}
-
-void Option(int option1, int option2) {
-	if (option1 == 1) {
-		if (option2 == 2) {
-			GotoXY(25, 22);
-			cout << " ";
-			GotoXY(70, 22);
-			cout << " ";
-		}
-		GotoXY(25, 20);
-		cout << "[";
-		GotoXY(50, 20);
-		cout << "]";
-	}
-	if (option1 == 2) {
-		if (option2 == 1) {
-			GotoXY(25, 20);
-			cout << " ";
-			GotoXY(50, 20);
-			cout << " ";
-		}
-		if (option2 == 3) {
-			GotoXY(25, 24);
-			cout << " ";
-			GotoXY(50, 24);
-			cout << " ";
-		}
-		GotoXY(25, 22);
-		cout << "[";
-		GotoXY(70, 22);
-		cout << "]";
-	}
-	if (option1 == 3) {
-		if (option2 == 2) {
-			GotoXY(25, 22);
-			cout << " ";
-			GotoXY(70, 22);
-			cout << " ";
-		}
-		if (option2 == 4) {
-			GotoXY(25, 26);
-			cout << " ";
-			GotoXY(50, 26);
-			cout << " ";
-		}
-		GotoXY(25, 24);
-		cout << "[";
-		GotoXY(50, 24);
-		cout << "]";
-	}
-	if (option1 == 4) {
-		if (option2 == 3) {
-			GotoXY(25, 24);
-			cout << " ";
-			GotoXY(50, 24);
-			cout << " ";
-		}
-		GotoXY(25, 26);
-		cout << "[";
-		GotoXY(50, 26);
-		cout << "]";
-	}
-}
-
-void Menu() {
-	int option1 = 1;
-	int option2 = 0;
-
-	system("cls");
-
-	TextColor(12);
-	GotoXY(15, 4);
-	cout << " __    _    _   _     ___     __  __        ______";
-	TextColor(12);
-	GotoXY(15, 5);
-	cout << "|  \\  | |  | |_| |   /   \\   |  \\/  |      / ___  \\";
-	TextColor(13);
-	GotoXY(15, 6);
-	cout << "|   \\ | |  |  _  |  /     \\  | |\\/| |      |_| /  /";
-	TextColor(14);
-	GotoXY(15, 7);
-	cout << "| |\\ \\| |  | | | |  \\     /  | |  | |         /  /____";
-	TextColor(10);
-	GotoXY(15, 8);
-	cout << "|_| \\ __|  |_| |_|   \\___/   |_|  |_|        /_______/";
-
-
-
-	TextColor(13);
-	GotoXY(30, 20);
-	cout << "PLAY GAME" << endl;
-	GotoXY(30, 22);
-	cout << "ABOUT (thong tin cac thanh vien nhom)" << endl;
-	GotoXY(30, 24);
-	cout << "LOAD GAME";
-	GotoXY(30, 26);
-	cout << "END GAME" << endl;
-
-	Option(option1, option2);
-	while (1) {
-		int h;
-		if (_kbhit()) {
-			h = _getch();
-			if (h == 13)
-				break;
-			if (h == 80) {
-				if (option1 < 8) {
-					option2 = option1;
-					option1++;
-					Option(option1, option2);
-				}
-			}
-			if (h == 72) {
-				if (option1 > 1) {
-					option2 = option1;
-					option1--;
-					Option(option1, option2);
-				}
-			}
-		}
-	}
-
-	if (option1 == 1) {
-		system("cls");
-		TextColor(10);
-
-		DrawBoard(OFFSET_X, OFFSET_Y, WIDTH_CONSOLE, HEIGHT_CONSOLE);
-		NewGame();
-
-
-		Menu();
-	}
-	if (option1 == 2) {
-		system("cls");
-		TextColor(14);
-
-		GotoXY(40, 8);
-		cout << "Do an game Snake - Mon Ky thuat lap trinh - Lop 21CLC07" << endl;
-		GotoXY(50, 9);
-		cout << "GVHD: Thay Truong Toan Thinh" << endl;
-		GotoXY(60, 11);
-		cout << "Nhom 2" << endl;
-		GotoXY(50, 12);
-		cout << "21127294 - Nguyen Hi Huu" << endl;
-		GotoXY(50, 13);
-		cout << "21127419 - Ngo Phuoc Tai" << endl;
-		GotoXY(50, 14);
-		cout << "21127175 - Le Anh Thu" << endl;
-		GotoXY(50, 15);
-		cout << "21127693 - Huynh Duc Thien" << endl;
-
-
-		cout << endl;
-
-		while (1)
-			if (_kbhit())
-			{
-				int in = _getch();
-				if (in == 13)
-					system("cls");
-				break;
-			}
-		Menu();
-	}
-	if (option1 == 3) {
-		//load game
-		system("cls");
-		TextColor(10);
-		GotoXY(50, 10);
-		string saveFile;
-		cout << "Nhap ten file load (Nhap duoi file .txt): "; cin >> saveFile;
-		GAMEOBJECT* gameObject = LoadGame(saveFile);
-		system("cls");
-		TextColor(10);
-		DrawBoard(OFFSET_X, OFFSET_Y, WIDTH_CONSOLE, HEIGHT_CONSOLE);
-		NewGame(gameObject);
-		Menu();
-	}
-	if (option1 == 4) {
-		//thoat game
-		exit(0);
-	}
-}
-
-void OpenGame() {
-	Loading();
-	Sleep(200);
-	system("cls");
-
-	Menu();
-	Sleep(100);
-	system("cls");
-
-	system("pause");
-}
-
-void NewGame() { // 
-	bool isQuit = false;
-	TIMER timer; // Bo dem fps cua game
-	timer.currentTime = clock();
-	timer.frameRate = double(1) / 15; // Mac dinh game la 15 fps 
-	timer.deltaTime = 0;
-	GAMEOBJECT* gameObject = initGameObject(); // struct chua nhung doi tuong co trong game
-	if (gameObject != NULL && gameObject->snake != NULL) {
-		SNAKE* snake = gameObject->snake;
-		POS* fruit = gameObject->fruit;
-		POS* gate = gameObject->gate;
-		if (snake != NULL && fruit != NULL && gate != NULL) {
-			renderSnake(gameObject->snake);
-			renderFruit(gameObject->fruit);
-			_getch();
-			while (!isQuit) { // Vong lap cua game
-				// Game chay theo trinh tu Input -> Update -> Render
-				if (timer.timeStep()) {
-					if (Input(gameObject) == true) break;
-					Update(gameObject);
-					if (checkCollision(gameObject->snake, gameObject->gate)) {
-						isQuit = true;		//xu ly ket thuc game
-						//Hieu ung khi ran chet
-						DeathEffect(gameObject->snake);
-						if (EndGame(gameObject->snake) == true) {
-							GotoXY(80, 10);
-							exit(0);	//thoat chuong trinh
-						}
-					}
-					Render(gameObject);
-					Sleep(100 / gameObject->snake->speed);
-				}
-			}
-		}
-	}
-	deleteGameObject(gameObject);
-}
-
-void NewGame(GAMEOBJECT* gameObject) { // Test
-	bool isQuit = false;
-	TIMER timer;
-	timer.currentTime = clock();
-	timer.frameRate = double(1) / 15;
-	timer.deltaTime = 0;
-
-	if (gameObject != NULL && gameObject->snake != NULL) {
-		SNAKE* snake = gameObject->snake;
-		POS* fruit = gameObject->fruit;
-		POS* gate = gameObject->gate;
-		gate = generateGate(snake);
-		if (snake != NULL && fruit != NULL && gate != NULL) {
-			renderSnake(gameObject->snake);
-			if (snake->haveGate == true) renderGate(gate);
-			else renderFruit(gameObject->fruit);
-			_getch();
-			while (!isQuit) {
-				if (timer.timeStep()) {
-					if (Input(gameObject) == true) break;
-					Update(gameObject);
-					if (checkCollision(gameObject->snake, gameObject->gate)) {
-						isQuit = true;
-						DeathEffect(gameObject->snake);
-						if (EndGame(gameObject->snake) == true) {
-							GotoXY(80, 10);
-							exit(0);	//thoat chuong trinh
-						}
-					}
-					Render(gameObject);
-					Sleep(100 / gameObject->snake->speed);
-				}
-			}
-		}
-	}
-	deleteGameObject(gameObject);
-}
-
-bool Input(GAMEOBJECT* gameObject) {
+//  snake
+void getDir() {
 	if (_kbhit()) {
-		int control = _getch();
-		//xu ly dieu khien snake (cac phim mui ten va W-A-S-D)
-		if ((GetAsyncKeyState(VK_UP) & 0x8000) != 0 || (GetAsyncKeyState(VK_UP) & 0x8000) || control == (int)'w' || control == (int)'W')
-			gameObject->snake->dir = up;
-		else if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0 || (GetAsyncKeyState(VK_LEFT) & 0x8000) || control == (int)'a' || control == (int)'A')
-			gameObject->snake->dir = left;
-		else if ((GetAsyncKeyState(VK_DOWN) & 0x8000) != 0 || (GetAsyncKeyState(VK_DOWN) & 0x8000) || control == (int)'s' || control == (int)'S')
-			gameObject->snake->dir = down;
-		else if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) != 0 || (GetAsyncKeyState(VK_RIGHT) & 0x8000) || control == (int)'d' || control == (int)'D')
-			gameObject->snake->dir = right;
-
-		if (control == (int)'t' || control == (int)'T') {	//tai game
-			GotoXY(OFFSET_X + 20, 25);
-			string saveFile;
-			cout << "Nhap ten file load: ";
-			cin >> saveFile;
-			GAMEOBJECT* gameObject = LoadGame(saveFile);
-			system("cls");
-			TextColor(10);
-			DrawBoard(OFFSET_X, OFFSET_Y, WIDTH_CONSOLE, HEIGHT_CONSOLE);
-			NewGame(gameObject);
-
-			Menu();
-		}
-		else if (control == (int)'p') { //dung game khi dang choi (pause)
-			GotoXY(OFFSET_X + WIDTH_CONSOLE / 2 - 2, OFFSET_Y - 1);
-			TextColor(10);
-			cout << "PAUSE";
-			while (true)
-				if ((GetAsyncKeyState(continueGame) & 0x8000) != 0 || GetAsyncKeyState(continueGame) & 0x8000) {
-					GotoXY(OFFSET_X + WIDTH_CONSOLE / 2 - 2, OFFSET_Y - 1);
-					cout << "     ";
-					break;
+		switch (_getch()) {
+			case 'w': case UP_ARROW:
+				if (charlock != UP) {
+					dir = UP;
+					charlock = DOWN;
 				}
-		}
-		else if (control == (int)'x' || control == (int)'X') {	//tro ve man hinh menu khi dang choi
-			return true;
-		}
-		else if (control == (int)'l' || control == (int)'L') {	//luu game
-			while (true)
-				if (SaveGame(gameObject)) break;
-			GotoXY(OFFSET_X + 20, 26);
-			system("pause");
-			GotoXY(OFFSET_X + 20, 25);
-			cout << "                                            ";
-			GotoXY(OFFSET_X + 20, 26);
-			cout << "                                            ";
-		}
-		else if (control == (int)'z' || control == (int)'Z') {	//tat nhac
-			PlaySound(NULL, NULL, NULL);
-		}
-		else if (control == (int)'u' || control == (int)'U') {	//bat nhac lai
-			PlaySound(TEXT("GameMusic"), NULL, SND_ASYNC);
+				break;
+			case 'a': case LEFT_ARROW:
+				if (charlock != LEFT) {
+					dir = LEFT;
+					charlock = RIGHT;
+				}
+				break;
+			case 's': case DOWN_ARROW:
+				if (charlock != DOWN) {
+					dir = DOWN;
+					charlock = UP;
+				}
+				break;
+			case 'd': case RIGHT_ARROW:
+				if (charlock != RIGHT) {
+					dir = RIGHT;
+					charlock = LEFT;
+				}
+				break;
+			case 'p':
+				temp = dir;
+				dir = STOP;
+				break;
+			default:
+				break;
 		}
 	}
-
-	// Xu ly de ran khong di nguoc lai duoc
-	if (gameObject->snake->dir == up && gameObject->snake->tmpDir == down)
-		gameObject->snake->dir = down;
-	if (gameObject->snake->dir == down && gameObject->snake->tmpDir == up)
-		gameObject->snake->dir = up;
-	if (gameObject->snake->dir == left && gameObject->snake->tmpDir == right)
-		gameObject->snake->dir = right;
-	if (gameObject->snake->dir == right && gameObject->snake->tmpDir == left)
-		gameObject->snake->dir = left;
-	gameObject->snake->tmpDir = gameObject->snake->dir;
-
-	return 0;
 }
 
-void Update(GAMEOBJECT* gameObject) {
-	SNAKE* snake = gameObject->snake;
-	POS* fruit = gameObject->fruit;
-	POS* gate = gameObject->gate;
+void moving(int type) {
+	switch(dir) {
+		case LEFT:
+			snake->head.x--;
+			break;
 
-	if (snake->length == 1 && snake->prevEat == false) {
-		drawChar(snake->body[0].x, snake->body[0].y, headColor, space);
+		case DOWN:
+			snake->head.y++;
+			break;
+
+		case UP:
+			snake->head.y--;
+			break;	
+
+		case RIGHT:
+			snake->head.x++;
+			break;
+
+		case STOP:
+			pauseGameBoard(60, 13);
+			pauseGameInput(60, 13, type);
+			break;
+			
+		default:
+			break;
 	}
-	else {
-		if (snake->prevEat == false) { // Neu khong an fruit thi di chuyen binh thuong
-			drawChar(snake->body[snake->length - 1].x, snake->body[snake->length - 1].y, tailColor, space);
-			for (int i = snake->length - 1; i >= 1; i--) {
-				snake->body[i].x = snake->body[i - 1].x;
-				snake->body[i].y = snake->body[i - 1].y;
-			}
-			if (snake->haveGate == true)
-			{
-				if ((snake->body[0].x == gate[1].x && snake->body[0].y == gate[1].y)
-					|| (snake->body[0].x == gate[2].x && snake->body[0].y == gate[2].y))
-				{
-					enterGate(snake, gate);
-					if ((gate[1].x == snake->body[snake->length - 1].x && gate[1].y == snake->body[snake->length - 1].y)
-						|| gate[2].x == snake->body[snake->length - 1].x && gate[2].y == snake->body[snake->length - 1].y
-						) {
-						renderGate(gate, space);
-						newLevel(snake);
-						generateFruit(snake, fruit, gate);
-						renderFruit(fruit);
+}
+
+void pauseGameInput(int x, int y, int type) {
+	bool input = false;
+	while (input != true) {
+		if (_kbhit()) {
+			switch (_getch()) {
+				case 'c':
+					for (int i = 0; i < 9; i++) {
+						gotoXY(x, y + i);
+						for (int j = 0; j < 23; j++) {
+							textColorWithBackground(map[y + i - TOP_SIDE_Y][x + j - LEFT_SIDE_X][1], WHITE);
+							if (map[y + i - TOP_SIDE_Y][x + j - LEFT_SIDE_X][0] != 0) {
+								cout << char(map[y + i - TOP_SIDE_Y][x + j - LEFT_SIDE_X][0]);
+							} else {
+								cout << ' ';
+							}
+						}
 					}
-				}
+					printSnake(snake);
+					printFood(food);
+					dir = temp;
+					moving(1);
+					input = true;
+					break;
+				case 's':
+					if (type == 1) {
+						CLASSICDATA player;
+						player.classicname = name;
+						player.difficulty = difficulty;
+						player.snake = snake;
+						player.score = score;
+						player.stage = stage;
+						classic_data = pushClassicData(classic_data, player, classic_player);
+						save = true;
+						gameover = true;
+					} else if (type == 2) {
+						TIMERUSHDATA player;
+						player.timerushname = name;
+						player.score = score;
+						player.stage = stage;
+						player.time = gametime;
+						player.difficulty = difficulty;
+						player.snake = snake;
+						timerush_data = pushTimeRushData(timerush_data, player, timerush_player);
+						save = true;
+						gameover = true;
+					} else {
+						INFINITEDATA player;
+						player.infinitename = name;
+						player.score = score;
+						player.snake = snake;
+						infinite_data = pushInfiniteData(infinite_data, player, infinite_player);
+						save = true;
+						gameover = true;
+					}
+					input = true;
+					break;
+				case 'x':
+					gameover = true;
+					input = true;
+					break;
+				default:
+					break;
 			}
 		}
-		else { // Neu an fruit thi keo dai vi tri head
-			snake->prevEat = false;
-			pushTopTail(snake, fruit);
-			//tao fruit hoac tao cong
-			if (snake->length % 8 == 0 && snake->length / 8 == snake->speed) {
-				//gate = generateGate(snake);
-				snake->haveGate = true;
-				fruit->x = 0;
-				fruit->y = 0;
-				renderGate(gate);
-			}
-			else {
-				generateFruit(gameObject->snake, gameObject->fruit, gameObject->gate);
-				renderFruit(fruit);
-			}
-
-		}
-	}
-
-	if (snake->dir == up)
-		snake->body[0].y--;
-	else if (snake->dir == left)
-		snake->body[0].x--;
-	else if (snake->dir == down)
-		snake->body[0].y++;
-	else if (snake->dir == right)
-		snake->body[0].x++;
-	if (snake->body[0].x == fruit->x && snake->body[0].y == fruit->y) {
-		snake->prevEat = true;
 	}
 }
 
-void Render(GAMEOBJECT* gameObject) {
-	SNAKE* snake = gameObject->snake;
-	renderSnake(snake);
+void swapSide() {
+	if (snake->head.x >= RIGHT_SIDE_X) {
+		snake->head.x = LEFT_SIDE_X + 1;
+	} else if (snake->head.x <= LEFT_SIDE_X) {
+		snake->head.x = RIGHT_SIDE_X - 1;
+	}
+
+	if (snake->head.y >= BOTTOM_SIDE_Y) {
+		snake->head.y = TOP_SIDE_Y + 1;
+	} else if (snake->head.y <= TOP_SIDE_Y) {
+		snake->head.y = BOTTOM_SIDE_Y - 1;
+	}	
 }
 
-bool EndGame(SNAKE* snake)
-{
-	PlaySound(TEXT("GameOver"), NULL, SND_ASYNC);
-	char key;
-	GotoXY(WIDTH_CONSOLE / 2 + OFFSET_X - 5, HEIGHT_CONSOLE / 2 - 3 + OFFSET_Y - 2);
-	cout << "GAME OVER!";
-	GotoXY(WIDTH_CONSOLE / 2 + OFFSET_X - 10, HEIGHT_CONSOLE / 2 + OFFSET_Y - 2);
-	cout << "DIEM CUA BAN LA: " << snake->length - 1;
-	GotoXY(WIDTH_CONSOLE / 2 + OFFSET_X - 10, HEIGHT_CONSOLE / 2 + 3 + OFFSET_Y - 2);
-	cout << "Nhap 0 de thoat game >> ";
-	cin >> key;
-	if (key == '0')
-		return true;
+// checking for propriate location
+bool isValidSpawn(int x, int y) {
+	if (x == snake->head.x && y == snake->head.y) return false;
+	for (int idx = 0; idx < snake->size; idx++) {
+		if (snake->part[idx].x == x && snake->part[idx].y == y) return false;
+	}
+	return true;
+}
+
+bool isValidFood(int x, int y) {
+	if (snake->head.x == x && snake->head.y == y) return false;
+	for (int i = 0; i < snake->size; i++) {
+		if (snake->part[i].x == x && snake->part[i].y == y) {
+			return false;
+		}
+	}
+	if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][0] == BLOCK
+	|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][0] == UPPER_BLOCK
+	|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X][0] == BOTTOM_BLOCK) return false;
+	return true;
+}
+
+bool isValidGate(int x, int y, int type) {
+	switch (type) {
+		case 0:
+			for (int i = 0; i < 4; i++) {
+				if (map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] != 0
+				|| map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] == TOP_SIDE_Y + 1
+				|| !isValidSpawn(x - 1 + i, y - 1)) return false;
+				if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] != 0
+				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == LEFT_SIDE_X + 1
+				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == RIGHT_SIDE_X) return false;
+				if (map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] != 0
+				|| map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] == BOTTOM_SIDE_Y - 1
+				|| !isValidSpawn(x + i - 1, y + 1)) return false;
+			}
+			break;
+		case 1:
+			for (int i = 0; i < 3; i++) {
+				if (map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] != 0
+				|| map[y - TOP_SIDE_Y - 1][x - LEFT_SIDE_X - 1 + i][0] == TOP_SIDE_Y + 1
+				|| !isValidSpawn(x - 1 + i, y - 1)) return false;
+				if (map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] != 0
+				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == LEFT_SIDE_X + 1
+				|| map[y - TOP_SIDE_Y][x - LEFT_SIDE_X - 1 + i][0] == RIGHT_SIDE_X) return false;
+				if (map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] != 0
+				|| map[y - TOP_SIDE_Y + 1][x - LEFT_SIDE_X - 1 + i][0] == BOTTOM_SIDE_Y - 1
+				|| !isValidSpawn(x - 1 + i, y + 1)) return false;
+			}
+			break;
+		default: 
+			break;
+	}
+	return true;
+}
+
+bool isFoodInBush(POSITION food) {
+	if (map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0] <= BUSH_LV3 && map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0] >= BUSH_LV1) return true;
 	return false;
 }
 
-void GuideTable() {
-	TextColor(rand() % 14 + 1);
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 7);
-	cout << "====================";
-	TextColor(rand() % 14 + 1);
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 9);
-	cout << "Nhan (t) de tai game" << endl;
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 10);
-	cout << "(Nhap duoi file .txt)" << endl;
-	TextColor(rand() % 14 + 1);
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 12);
-	cout << "Nhan (l) de luu game" << endl;
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 13);
-	cout << "(Nhap duoi file .txt)" << endl;
-	TextColor(rand() % 14 + 1);
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 15);
-	cout << "Nhan (z) de tat nhac" << endl;
-	TextColor(rand() % 14 + 1);
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 17);
-	cout << "Nhan (u) de bat nhac" << endl;
-	TextColor(rand() % 14 + 1);
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 19);
-	cout << "Nhan (x) de thoat game" << endl;
-	TextColor(rand() % 14 + 1);
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 21);
-	cout << "Nhan (p) de PAUSE game" << endl;
-	GotoXY(WIDTH_CONSOLE + 4 + OFFSET_X, 23);
-	cout << "Nhan (c) de tiep tuc" << endl;
+// check hitting obstacles
+void checkCollisionBoard(SNAKE *snake) {
+	if (snake->head.x <= LEFT_SIDE_X || snake->head.x >= RIGHT_SIDE_X) gameover = true;
+	if (snake->head.y <= TOP_SIDE_Y || snake->head.y >= BOTTOM_SIDE_Y) gameover = true;
+	
 }
 
+void checkCollisionObstacles(SNAKE *snake) {
+	if (map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] == BLOCK
+	|| map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] == UPPER_BLOCK
+	|| map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] == BOTTOM_BLOCK)
+	gameover = true;
+}
 
+void checkSelfHitting(SNAKE *snake) {
+	for (int i = 0; i < snake->size; i++) {
+		if (snake->head.x == snake->part[i].x && snake->head.y == snake->part[i].y) gameover = true;
+	}
+}
+
+// check eating food
+bool eatFood(POSITION food) {
+	if (snake->head.x == food.x && snake->head.y == food.y) return true;
+    return false;
+}
+
+bool getInGate(POSITION pos) {
+	if (map[pos.y - TOP_SIDE_Y][pos.x - LEFT_SIDE_X][0] == GATE_SPOT) {
+		return true;
+	}
+	return false;
+}
+
+// snake print
+void clearTail() {
+	if (map[snake->part[snake->size - 1].y - TOP_SIDE_Y][snake->part[snake->size - 1].x - LEFT_SIDE_X][0] != BUSH_LV1
+	 && map[snake->part[snake->size - 1].y - TOP_SIDE_Y][snake->part[snake->size - 1].x - LEFT_SIDE_X][0] != BUSH_LV2
+	 && map[snake->part[snake->size - 1].y - TOP_SIDE_Y][snake->part[snake->size - 1].x - LEFT_SIDE_X][0] != BUSH_LV3) {
+		textColorWithBackground(WHITE, WHITE);
+		gotoXY(snake->part[snake->size - 1].x, snake->part[snake->size - 1].y);
+		cout << " ";
+	}
+}
+
+void printSnake(SNAKE *snake) {
+	if (map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] != BUSH_LV1
+	 && map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] != BUSH_LV2
+	 && map[snake->head.y - TOP_SIDE_Y][snake->head.x - LEFT_SIDE_X][0] != BUSH_LV3) {
+		gotoXY(snake->head.x, snake->head.y);
+		textColorWithBackground(DARK_RED, WHITE);
+		cout << stid[0];
+	}
+	textColorWithBackground(DARK_YELLOW, WHITE);
+	for (int i = 1; i < snake->size; i++) {
+		if (map[snake->part[i].y - TOP_SIDE_Y][snake->part[i].x - LEFT_SIDE_X][0] != BUSH_LV1
+		 && map[snake->part[i].y - TOP_SIDE_Y][snake->part[i].x - LEFT_SIDE_X][0] != BUSH_LV2
+		 && map[snake->part[i].y - TOP_SIDE_Y][snake->part[i].x - LEFT_SIDE_X][0] != BUSH_LV3) {
+			gotoXY(snake->part[i].x, snake->part[i].y);
+			cout << stid[i];
+		}
+	}
+
+}
+
+void renderSnake(POSITION head) {
+	POSITION prevpart, prev2part;
+	prevpart = snake->part[0];
+	snake->part[0] = head;
+	for (int idx = 1; idx < snake->size; idx++) {
+		prev2part = snake->part[idx];
+		snake->part[idx] = prevpart;
+		prevpart = prev2part;
+	}
+}
+
+// food print
+void clearFood(POSITION food) {
+	gotoXY(food.x, food.y);
+	if (map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0] <= BUSH_LV3 && map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0] >= BUSH_LV1) {
+		textColorWithBackground(DARK_GREEN, WHITE);
+		cout << char(map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0]);
+	} else {
+		textColorWithBackground(WHITE, WHITE);
+		cout << " ";
+	}
+}
+
+void printFood(POSITION food) {
+	textColorWithBackground(DARK_YELLOW, WHITE);
+	gotoXY(food.x, food.y);
+	if (!isFoodInBush(food)) {
+		cout << char(FOOD);
+	} else {
+		cout << char(map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0]);
+	}
+}
+
+void printTimeFood(POSITION timefood) {
+	textColorWithBackground(PURPLE, WHITE);
+	gotoXY(timefood.x, timefood.y);
+	if (!isFoodInBush(timefood)) {
+		cout << char(TIME_FOOD);
+	} else {
+		cout << char(map[food.y - TOP_SIDE_Y][food.x - LEFT_SIDE_X][0]);
+	}
+}
+
+// gate print
+void printGate(int x, int y, int type) {
+	switch (type) {
+		case 0:
+			textColorWithBackground(DARK_YELLOW, WHITE);
+			gotoXY(x - 1, y - 1);
+			for (int i = 0; i < 4; i++) {
+				cout << char(BOTTOM_BLOCK);
+			}
+			textColorWithBackground(DARK_YELLOW, BLACK);
+			gotoXY(x - 1, y);
+			cout << char(BLOCK) << "  " << char(BLOCK);
+			break;
+		case 1:
+			textColorWithBackground(DARK_YELLOW, WHITE);
+			gotoXY(x - 1, y - 1);
+			cout << char(BOTTOM_BLOCK) << char(BOTTOM_BLOCK);
+			textColorWithBackground(DARK_YELLOW, BLACK);
+			gotoXY(x - 1, y);
+			cout << char(BLOCK) << ' ';
+			textColorWithBackground(DARK_YELLOW, WHITE);
+			gotoXY(x - 1, y + 1);
+			cout << char(UPPER_BLOCK) << char(UPPER_BLOCK);
+			break;
+	}
+}
+
+// map
+void castMapBase() {
+	for (int i = 0; i < PLAY_SCREEN_WIDTH; i++) {
+		for (int j = 0; j < PLAY_SCREEN_LENGTH; j++) {
+			map[i][j][0] = 0;
+			map[i][j][1] = WHITE;
+		}
+	}
+}
+
+void castMap1() {
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 20; j++) {
+			map[i + 4][j + 16][0] = BLOCK;
+			map[i + 4][j + 16][1] = GREY;
+		}
+	}
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 35; j++) {
+			map[i + 6][j + 9][0] = BLOCK;
+			map[i + 6][j + 9][1] = GREY;
+		}
+	}
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 15; j++) {
+			map[i + 11][j + 9][0] = BLOCK;
+			map[i + 11][j + 9][1] = GREY;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 11; j++) {
+			map[i + 7][j + 70][0] = BOTTOM_BLOCK;
+			map[i + 7][j + 70][1] = GREY;
+		}
+	}
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 11; j++) {
+			if (j % 2) {
+				map[i + 9][j + 70][0] = BUSH_LV2;
+			} else {
+				map[i + 9][j + 70][0] = BUSH_LV3;
+			}
+			map[i + 9][j + 70][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 11; j++) {
+			map[i + 14][j + 70][0] = UPPER_BLOCK;
+			map[i + 14][j + 70][1] = GREY;
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 5; j++) {
+			if (j % 2) {
+				map[i + 17][j + 51][0] = BUSH_LV2;
+			} else {
+				map[i + 17][j + 51][0] = BUSH_LV3;
+			}
+			map[i + 17][j + 51][1] = DARK_GREEN;
+		}
+	}
+}
+
+void castMap2() {
+	for (int i = 0; i < 12; i++) {
+		for (int j = 0; j < 21; j++) {
+			map[i + 5][j + 8][0] = BLOCK;
+			map[i + 5][j + 8][1] = GREY;
+		}
+	}
+	map[5][9][0] = 15;
+	map[16][9][0] = 15;
+	map[5][27][0] = 15;
+	map[16][27][0] = 15;
+	map[5][8][0] = 15;
+	map[16][8][0] = 15;
+	map[5][28][0] = 15;
+	map[16][28][0] = 15;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 14; j++) {
+			if (j % 2) {
+				map[i + 3][j + 42][0] = BUSH_LV2;
+			} else {
+				map[i + 3][j + 42][0] = BUSH_LV3;
+			}
+			map[i + 3][j + 42][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (j % 2){
+				map[i + 17][j + 33][0] = BUSH_LV3;
+			} else {
+				map[i + 17][j + 33][0] = BUSH_LV2;
+			}
+			map[i + 17][j + 33][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 8; j++) {
+			map[i + 15][j + 48][0] = BLOCK;
+			map[i + 15][j + 48][1] = GREY;
+		}
+	}
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 9; j++) {
+			if (j % 2) {
+				map[i + 14][j + 64][0] = BUSH_LV2;
+			} else {
+				map[i + 14][j + 64][0] = BUSH_LV3;
+			}
+			map[i + 14][j + 64][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 11; j++) {
+			if (j % 2) {
+				map[i + 4][j + 77][0] = UPPER_BLOCK;
+			} else {
+				map[i + 4][j + 77][0] = BOTTOM_BLOCK;
+			}
+			map[i + 4][j + 77][1] = BLACK;
+		}
+	}
+}
+
+void castMap3() {
+	for (int i = 0; i < 8; i++) {
+		map[i + 4][14][0] = BLOCK;
+		map[i + 4][14][1] = GREY;
+	}
+	for (int i = 0; i < 30; i++) {
+		map[4][i + 14][0] = BLOCK;
+		map[4][i + 14][1] = GREY;
+	}
+	for (int i = 0; i < 27; i++) {
+		map[7][i + 17][0] = BLOCK;
+		map[7][i + 17][1] = GREY;
+	}
+	for (int i = 0; i < 5; i++) {
+		map[i + 7][17][0] = BLOCK;
+		map[i + 7][17][1] = GREY;
+	}
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 10; j++) {
+			if (j % 2) {
+				map[i + 7][j + 65][0] = BUSH_LV2;
+			} else {
+				map[i + 7][j + 65][0] = BUSH_LV3;
+			}
+			map[i + 7][j + 65][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (j % 2) {
+				map[i + 12][j + 23][0] = BUSH_LV2;
+			} else {
+				map[i + 12][j + 23][0] = BUSH_LV3;
+			}
+			map[i + 12][j + 23][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 41; i++) {
+		map[18][i + 42][0] = BLOCK;
+		map[18][i + 42][1] = GREY;
+	}
+	for (int i = 0; i < 38; i++) {
+		map[15][i + 42][0] = BLOCK;
+		map[15][i + 42][1] = GREY;
+	}
+	for (int i = 0; i < 15; i++) {
+		map[i + 4][83][0] = BLOCK;
+		map[i + 4][83][1] = GREY;
+	}
+	for (int i = 0; i < 12; i++) {
+		map[i + 4][80][0] = BLOCK;
+		map[i + 4][80][1] = GREY;
+	}
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 5; j++) {
+			if (j % 2) {
+				map[i + 12][j + 32][0] = BUSH_LV2;
+			} else {
+				map[i + 12][j + 32][0] = BUSH_LV3;
+			}
+			map[i + 12][j + 32][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 3; j++) {
+			map[i + 12][j + 29][0] = BLOCK;
+			map[i + 12][j + 29][1] = DARK_BLUE;
+		}
+	}
+}
+
+void castMap4() {
+	for (int i = 0; i < 12; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (j % 2) {
+				map[i + 6][j + 13][0] = BUSH_LV2;
+			} else {
+				map[i + 6][j + 13][0] = BUSH_LV3;
+			}
+			map[i + 6][j + 13][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 12; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (j % 2) {
+				map[i + 6][j + 75][0] = BUSH_LV2;
+			} else {
+				map[i + 6][j + 75][0] = BUSH_LV3;
+			}
+			map[i + 6][j + 75][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 7; i++) {
+		map[i + 1][15][0] = BLOCK;
+		map[i + 1][15][1] = GREY;
+		map[i + 1][16][0] = BLOCK;
+		map[i + 1][16][1] = GREY;
+	}
+	for (int i = 0; i < 7; i++) {
+		map[i + 15][15][0] = BLOCK;
+		map[i + 15][15][1] = GREY;
+		map[i + 15][16][0] = BLOCK;
+		map[i + 15][16][1] = GREY;
+	}
+	for (int i = 0; i < 7; i++) {
+		map[i + 1][77][0] = BLOCK;
+		map[i + 1][77][1] = GREY;
+		map[i + 1][78][0] = BLOCK;
+		map[i + 1][78][1] = GREY;
+	}
+	for (int i = 0; i < 7; i++) {
+		map[i + 15][77][0] = BLOCK;
+		map[i + 15][77][1] = GREY;
+		map[i + 15][78][0] = BLOCK;
+		map[i + 15][78][1] = GREY;
+	}
+// ngat
+	for (int i = 0; i < 6; i++) {
+		map[9][i + 29][0] = BLOCK;
+		map[9][i + 29][1] = GREY;
+		map[10][i + 29][0] = BLOCK;
+		map[10][i + 29][1] = GREY;
+	}
+	for (int i = 0; i < 6; i++) {
+		map[13][i + 29][0] = BLOCK;
+		map[13][i + 29][1] = GREY;
+		map[14][i + 29][0] = BLOCK;
+		map[14][i + 29][1] = GREY;
+	}
+	for (int i = 0; i < 7; i++) {
+		map[9][i + 38][0] = BLOCK;
+		map[9][i + 38][1] = GREY;
+		map[10][i + 38][0] = BLOCK;
+		map[10][i + 38][1] = GREY;
+	}
+	for (int i = 0; i < 7; i++) {
+		map[13][i + 38][0] = BLOCK;
+		map[13][i + 38][1] = GREY;
+		map[14][i + 38][0] = BLOCK;
+		map[14][i + 38][1] = GREY;
+	}
+// ngat
+	for (int i = 0; i < 7; i++) {
+		map[9][i + 48][0] = BLOCK;
+		map[9][i + 48][1] = GREY;
+		map[10][i + 48][0] = BLOCK;
+		map[10][i + 48][1] = GREY;
+	}
+	for (int i = 0; i < 7; i++) {
+		map[13][i + 48][0] = BLOCK;
+		map[13][i + 48][1] = GREY;
+		map[14][i + 48][0] = BLOCK;
+		map[14][i + 48][1] = GREY;
+	}
+	for (int i = 0; i < 6; i++) {
+		map[9][i + 58][0] = BLOCK;
+		map[9][i + 58][1] = GREY;
+		map[10][i + 58][0] = BLOCK;
+		map[10][i + 58][1] = GREY;
+	}
+	for (int i = 0; i < 6; i++) {
+		map[13][i + 58][0] = BLOCK;
+		map[13][i + 58][1] = GREY;
+		map[14][i + 58][0] = BLOCK;
+		map[14][i + 58][1] = GREY;
+	}
+}
+
+void castMap5() {
+	for (int i = 0; i < 32; i++) {
+		map[7][i + 10][0] = BLOCK;
+		map[7][i + 10][1] = GREY;
+	}
+	for (int i = 0; i < 10; i++) {
+		map[i + 4][17][0] = BLOCK;
+		map[i + 4][17][1] = GREY;
+	}
+	for (int i = 0; i < 7; i++) {
+		map[i + 1][41][0] = BLOCK;
+		map[i + 1][41][1] = GREY;
+	}
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			map[i + 1][j + 16][0] = BUSH_LV2;
+			map[i + 1][j + 16][1] = DARK_GREEN;
+		}
+	}
+
+	for (int i = 0; i < 23; i++) {
+		map[18][i + 1][0] = BLOCK;
+		map[18][i + 1][1] = GREY;
+	}
+	for (int i = 0; i < 11; i++) {
+		map[i + 12][32][0] = BLOCK;
+		map[i + 12][32][1] = GREY;
+	}
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 8; j++) {
+			map[i + 17][j + 24][0] = BLOCK;
+			map[i + 17][j + 24][0] = BLACK;
+		}
+	}
+
+	for (int i = 0; i < 10; i++) {
+		map[i + 1][54][0] = BLOCK;
+		map[i + 1][54][1] = GREY;
+	}
+	for (int i = 21; i > 1; i--) {
+		map[6][75 - i][0] = BLOCK;
+		map[6][75 - i][1] = GREY;
+	}
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			map[i + 11][j + 53][0] = BUSH_LV3;
+			map[i + 11][j + 53][1] = DARK_GREEN;
+		}
+	}
+
+	for (int i = 0; i < 38; i++) {
+		map[14][i + 42][0] = BLOCK;
+		map[14][i + 42][1] = GREY;
+	}
+	for (int i = 5; i > 1; i--) {
+		map[19 - i][49][0] = BLOCK;
+		map[19 - i][49][1] = GREY;
+	}
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 8; j++) {
+			map[i + 17][j + 24][0] = BUSH_LV3;
+			map[i + 17][j + 24][1] = DARK_GREEN;
+		}
+	}
+
+	for (int i = 0; i < 11; i++) {
+		map[18][i + 60][0] = BLOCK;
+		map[18][i + 60][1] = GREY;
+	}
+	for (int i = 0; i < 5; i++) {
+		map[i + 18][60][0] = BLOCK;
+		map[i + 18][60][1] = GREY;
+	}
+
+	for (int i = 0; i < 11; i++) {
+		map[11][i + 79][0] = BLOCK;
+		map[11][i + 79][1] = GREY;
+	}
+	for (int i = 0; i < 8; i++) {
+		map[i + 11][79][0] = BLOCK;
+		map[i + 11][79][1] = GREY;
+	}
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 7; j++) {
+			map[i + 17][j + 80][0] = BUSH_LV2;
+			map[i + 17][j + 80][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 5; i++) {
+		map[18][i + 87][0] = BLOCK;
+		map[18][i + 87][1] = GREY;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++) {
+			map[i + 1][j + 83][0] = BUSH_LV3;
+			map[i + 1][j + 83][1] = DARK_GREEN;
+		}
+	}
+	for (int i = 0; i < 6; i++) {
+		map[i + 5][84][0] = BLOCK;
+		map[i + 5][84][1] = GREY;
+	}
+}
+
+void printMap() {
+	for (int i = 0; i < PLAY_SCREEN_WIDTH; i++) {
+		for (int j = 0; j < PLAY_SCREEN_LENGTH; j++) {
+			if (map[i][j][0] != 15) {
+				textColorWithBackground(map[i][j][1], WHITE);
+				gotoXY(j + LEFT_SIDE_X, i + TOP_SIDE_Y);
+				cout << char(map[i][j][0]);
+			}
+		}
+	}
+}
+
+void graphSet(int stage, SNAKE *snake) {
+	castMapBase();
+	gotoXY(10, 7);
+	cout << stage;
+	gotoXY(10, 9);
+	cout << score;
+	printSnake(snake);
+	switch (stage) {
+		case 1:
+			castMap1();
+			printMap();
+			break;
+		case 2:
+			castMap2();
+			printMap();
+			break;
+		case 3:
+			castMap3();
+			printMap();
+			break;
+		case 4:
+			castMap4();
+			printMap();
+			break;
+		case 5:
+			castMap5();
+			printMap();
+			break;
+		default:
+			break;
+	}
+}
+
+// gate
+void drawDesGate(int type, int x, int y) {
+	textColorWithBackground(DARK_YELLOW, WHITE);
+	if (type == 1) {
+		gotoXY(x - 1, y);
+		cout << char(214) << 'O' << char(183);
+		gotoXY(x - 1, y + 1);
+		cout << char(186) << ' ' << char(186);
+		gotoXY(x - 1, y+ 1);
+		cout << char(189) << ' ' << char(211);
+	} else {
+		gotoXY(x, y - 1);
+		cout << char(213) << char(205) << char(190);
+		gotoXY(x, y);
+		cout << 'O';
+		gotoXY(x, y + 1);
+		cout << char(212) << char(205) << char(184);
+	}
+}
+
+void desGate(int stage) {
+	switch (stage) {
+		case 1:
+		case 2: 
+			drawDesGate(1, LEFT_SIDE_X + 2, TOP_SIDE_Y + 1);
+			snake->head = {LEFT_SIDE_X + 2, TOP_SIDE_Y + 2};
+			for (int i = 0; i < snake->size; i++) {
+				snake->part[i] = snake->head;
+			}
+			dir = DOWN;
+			charlock = UP;
+			break;
+		case 3:
+			drawDesGate(2, LEFT_SIDE_X + 1, TOP_SIDE_Y + 4);
+			snake->head = {LEFT_SIDE_X + 2, TOP_SIDE_Y + 4};
+			for (int i = 0; i < snake->size; i++) {
+				snake->part[i] = snake->head;
+			}
+			dir = RIGHT;
+			charlock = LEFT;
+			break;
+		case 4:
+			drawDesGate(1, RIGHT_SIDE_X - 5, TOP_SIDE_Y + 1);
+			snake->head = {RIGHT_SIDE_X - 5, TOP_SIDE_Y + 2};
+			for (int i = 0; i < snake->size; i++) {
+				snake->part[i] = snake->head;
+			}
+			dir = DOWN;
+			charlock = UP;
+			break;
+		case 5:
+			drawDesGate(2, LEFT_SIDE_X + 1, TOP_SIDE_Y + 14);
+			snake->head = {LEFT_SIDE_X + 2, TOP_SIDE_Y + 14};
+			for (int i = 0; i < snake->size; i++) {
+				snake->part[i] = snake->head;
+			}
+			dir = RIGHT;
+			charlock = LEFT;
+			break;
+	}
+}
+
+void removeDesGate(int stage, bool &cleargate) {
+	switch(stage) {
+		case 1:
+		case 2:
+			if (snake->part[snake->size - 1].x != LEFT_SIDE_X + 2 && snake->part[snake->size - 1].y != TOP_SIDE_Y + 2) {
+				cleargate = true;
+				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 1, 3, 3);
+			}
+			break;
+		case 3:
+			if (snake->part[snake->size - 1].x != LEFT_SIDE_X + 1 && snake->part[snake->size - 1].y != TOP_SIDE_Y + 4) {
+				cleargate = true;
+				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 3, 3, 3);
+			}
+			break;
+		case 4:
+			if (snake->part[snake->size - 1].x != RIGHT_SIDE_X - 5 && snake->part[snake->size - 1].y != TOP_SIDE_Y + 2) {
+				cleargate = true;
+				drawBlank(RIGHT_SIDE_X - 6, TOP_SIDE_Y + 1, 3, 3);
+			}
+			break;
+		case 5:
+			if (snake->part[snake->size - 1].x != LEFT_SIDE_X + 2 && snake->part[snake->size - 1].y != TOP_SIDE_Y + 14) {
+				cleargate = true;
+				drawBlank(LEFT_SIDE_X + 1, TOP_SIDE_Y + 13, 3, 3);
+			}
+			break;
+	}
+}
+
+void renderNewStage(int &gatecount, int &maxpoint, bool &cleargate) {
+	POSITION temp;
+	temp = snake->head;
+	drawBlank(27, 6, 89, 19);
+	graphSet(stage % 5 + 1, snake);
+	stage++;
+	gatecount = 0;
+	maxpoint += 100;
+	desGate(stage % 5 + 1);
+	cleargate = false;
+	gotoXY(temp.x, temp.y);
+	textColorWithBackground(map[temp.y - TOP_SIDE_Y][temp.x - LEFT_SIDE_X][1], WHITE);
+	if (map[temp.y - TOP_SIDE_Y][temp.x - LEFT_SIDE_X][0] == 0) cout << " ";
+	else cout << char(map[temp.y - TOP_SIDE_Y][temp.x - LEFT_SIDE_X][0]);
+	
+}
+
+void snakeDisappear(POSITION head, int speedcontrol) {
+	int temp = 0;
+	while (!getInGate(snake->part[snake->size - 1])) {
+		renderSnake(head);
+		clearTail();
+		textColorWithBackground(DARK_YELLOW, BLACK);
+		gotoXY(snake->part[temp].x, snake->part[temp].y);
+		cout << stid[temp];
+		textColorWithBackground(DARK_YELLOW, WHITE);
+		for (int i = temp + 1; i < snake->size - 1; i++) {
+			if (map[snake->part[i].y - TOP_SIDE_Y][snake->part[i].x - LEFT_SIDE_X][0] != BUSH_LV3
+			&& map[snake->part[i].y - TOP_SIDE_Y][snake->part[i].x - LEFT_SIDE_X][0] <= BUSH_LV2
+			&& map[snake->part[i].y - TOP_SIDE_Y][snake->part[i].x - LEFT_SIDE_X][0] <= BUSH_LV1){
+				gotoXY(snake->part[i].x, snake->part[i].y);
+				cout << stid[i];
+			}
+
+		}
+		Sleep(speedcontrol);
+		temp++;
+	}
+
+}
+
+// reset
+void resetScore() {
+	textColorWithBackground(DARK_YELLOW, WHITE);
+	gotoXY(10, 9);
+	cout << score;
+}
+
+void resetSpeed() {
+	textColorWithBackground(DARK_YELLOW, WHITE);
+	gotoXY(10, 7);
+	if (speedcontrol < 14)
+		cout << speedcontrol + 1;
+	else
+		cout << "MAX";
+}
+
+// load data into game play
+void loadClassicDataIntoGame(CLASSICDATA data) {
+	if (data.snake->part[0].x == data.snake->part[1].x) {
+		if (data.snake->part[0].y - data.snake->part[1].y > 0) {
+			dir = DOWN;
+			charlock = UP;
+		}
+		else {
+			dir = UP;
+			charlock = DOWN;
+		}
+	}
+	else if (data.snake->part[0].x - data.snake->part[1].x > 0) {
+		dir = RIGHT;
+		charlock = LEFT;
+	}
+	else {
+		dir = LEFT;
+		charlock = RIGHT;
+	}
+	score = data.score;
+	gameover = false;
+	save = false;
+	difficulty = data.difficulty;
+	snake->part = new POSITION[100];
+	snake->head = data.snake->head;
+	snake->size = data.snake->size;
+	for (int i = 0; i < snake->size; i++) {
+		snake->part[i] = data.snake->part[i];
+	}
+	stage = data.stage;
+}
+
+void loadTimeRushDataIntoGame(TIMERUSHDATA data) {
+	if (data.snake->part[0].x == data.snake->part[1].x) {
+		if (data.snake->part[0].y - data.snake->part[1].y > 0) {
+			dir = DOWN;
+			charlock = UP;
+		}
+		else {
+			dir = UP;
+			charlock = DOWN;
+		}
+	}
+	else if (data.snake->part[0].x - data.snake->part[1].x > 0) {
+		dir = RIGHT;
+		charlock = LEFT;
+	}
+	else {
+		dir = LEFT;
+		charlock = RIGHT;
+	}
+	score = data.score;
+	gameover = false;
+	save = false;
+	difficulty = data.difficulty;
+	gametime = data.time;
+	snake->part = new POSITION[100];
+	snake->head = data.snake->head;
+	snake->size = data.snake->size;
+	for (int i = 0; i < snake->size; i++) {
+		snake->part[i] = data.snake->part[i];
+	}
+	stage = data.stage;
+}
+
+void loadInfiniteDataIntoGame(INFINITEDATA data) {
+	if (data.snake->part[0].x == data.snake->part[1].x) {
+		if (data.snake->part[0].y - data.snake->part[1].y > 0) {
+			dir = DOWN;
+			charlock = UP;
+		}
+		else {
+			dir = UP;
+			charlock = DOWN;
+		}
+	}
+	else if (data.snake->part[0].x - data.snake->part[1].x > 0) {
+		dir = RIGHT;
+		charlock = LEFT;
+	}
+	else {
+		dir = LEFT;
+		charlock = RIGHT;
+	}
+	score = data.score;
+	gameover = false;
+	save = false;
+	snake->part = new POSITION[100];
+	snake->head = data.snake->head;
+	snake->size = data.snake->size;
+	for (int i = 0; i < snake->size; i++) {
+		snake->part[i] = data.snake->part[i];
+	}
+}
+
+// create new game
+void newClassicGame(int difficulty) {
+	switch (difficulty) {
+		case 0:
+			speedcontrol = 200;
+			break;
+		case 1:
+			speedcontrol = 90;
+			break;
+		case 2:
+			speedcontrol = 30;
+			break;
+		default:
+			break;
+	}
+	drawBlank(27, 6, 89, 19);
+	graphSet(stage, snake);
+	generateFood(foodnum, food);
+	printFood(food);
+	bool visit = false;
+	bool cleargate = false;
+	int gatecount = 0;
+	int maxpoint = stage * 100;
+
+	while (!gameover) {
+		temp = dir;
+		getDir();
+		moving(1);
+		clearTail();
+		if (snake->size > 1 && !getInGate(snake->head)) checkSelfHitting(snake);
+		checkCollisionBoard(snake);
+		checkCollisionObstacles(snake);
+		if (score == maxpoint && gatecount == 0) {
+			generateGate(map);
+			gatecount++;
+		} else if (score == maxpoint && gatecount == 1) {
+			if (getInGate(snake->head) == true)  {
+				snakeDisappear(snake->head, speedcontrol);
+				renderNewStage(gatecount, maxpoint, cleargate);
+			}
+		} else if (eatFood(food) == true) {
+			PlaySound(TEXT("EatFruit.wav"), NULL, SND_ASYNC | SND_FILENAME);
+			score += 10;
+			resetScore();
+			clearFood(food);
+			if (score != maxpoint) {
+				generateFood(foodnum, food);
+				printFood(food);
+			} else {
+				removeFood(food);
+			}
+			if (snake->size < 32) generatePart(snake);
+		}
+		if (cleargate == false) {
+			removeDesGate(stage % 5 + 1, cleargate);
+			if (cleargate == true) {
+				generateFood(foodnum, food);
+				printFood(food);
+			}
+		}
+		renderSnake(snake->head);
+		printSnake(snake);
+		Sleep(speedcontrol);
+	}
+	if (save == false) deathEffect(snake);
+	drawBoard(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH, PURPLE);
+	for (int i = 0; i < 25; i++) {
+		gotoXY(0, i);
+		cout << ' ';
+	}
+	dir = STOP;
+}
+
+void newTimeRushGame(int stage, int difficulty) {
+	switch (difficulty) {
+	case 0:
+		speedcontrol = 200;
+		break;
+	case 1:
+		speedcontrol = 90;
+		break;
+	case 2:
+		speedcontrol = 30;
+		break;
+	default:
+		break;
+	}
+	drawBlank(27, 6, 89, 19);
+	POSITION timefood;
+	graphSet(stage, snake);
+	generateFood(foodnum, food);
+	printFood(food);
+	generateTimeFood(foodnum, timefood);
+	printTimeFood(timefood);
+	
+	while (!gameover) {
+		temp = dir;
+		getDir();
+		moving(2);
+		clearTail();
+		if (snake->size > 1 && !getInGate(snake->head)) checkSelfHitting(snake);
+		checkCollisionBoard(snake);
+		checkCollisionObstacles(snake);
+		if (eatFood(food) == true) {
+			score += 10;
+			resetScore();
+			clearFood(food);
+			generateFood(foodnum, food);
+			printFood(food);
+			if (snake->size < 32) generatePart(snake);
+		}
+		if (eatFood(timefood) == true) {
+			PlaySound(TEXT("EatFruit.wav"), NULL, SND_ASYNC | SND_FILENAME);
+			if (gametime > 310) {
+				gametime = 360;
+			} else {
+				gametime += 50;
+			}
+			clearFood(timefood);
+			generateTimeFood(foodnum, timefood);
+			printTimeFood(timefood);
+		}
+		renderSnake(snake->head);
+		printSnake(snake);
+		gametime--;
+		if (gametime == 0) gameover = true;
+		renderTimeRush(snake, gametime);
+		Sleep(speedcontrol);
+	}
+	if (save == false) deathEffect(snake);
+	drawBoard(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH, PURPLE);
+	for (int i = 0; i < 25; i++) {
+		gotoXY(0, i);
+		cout << ' ';
+	}
+	dir = STOP;
+}
+
+void newInfiniteGame() {
+	castMapBase();
+	textColorWithBackground(PURPLE, WHITE);
+	drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+	speedcontrol = 0;
+	textColorWithBackground(DARK_YELLOW, WHITE);
+	gotoXY(3, 7);
+	cout << "Speed: ";
+	gotoXY(10, 7);
+	cout << speedcontrol + 1;
+	gotoXY(10, 9);
+	cout << score;
+	printSnake(snake);
+	generateFood(foodnum, food);
+	printFood(food);
+
+	while (!gameover) {
+		getDir();
+		moving(3);
+		clearTail();
+		if (snake->size > 1) checkSelfHitting(snake);
+		swapSide();
+		if (eatFood(food) == true) {
+			PlaySound(TEXT("EatFruit.wav"), NULL, SND_ASYNC | SND_FILENAME);
+			score += 10;
+			if (speedcontrol < 14) speedcontrol++;
+			resetScore();
+			resetSpeed();
+			clearFood(food);
+			generateFood(foodnum, food);
+			textColorWithBackground(BLACK, WHITE);
+			printFood(food);
+			if (snake->size < 32) generatePart(snake);
+		}
+		renderSnake(snake->head);
+		printSnake(snake);
+		Sleep(150 - speedcontrol * 10);
+	}
+	deathEffect(snake);
+	textColorWithBackground(PURPLE, WHITE);
+	drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
+	dir = STOP;
+}
+
+void openGame() {
+	setlocale(LC_CTYPE, ".OCP");
+	fixConsoleWindow();
+	noCursorType();
+	changeConsoleColor(WHITE);
+	loading();
+	loadClassicFile(classic_data, classic_player);
+	loadTimeRushFile(timerush_data, timerush_player);
+	loadInfiniteFile(infinite_data, infinite_player);
+	while (true) {
+		mainMenu();
+		POSITION choice = inputMainMenu();
+		if (choice.x == 0 && choice.y == 0) {
+			system("cls");
+			playMenu();
+			POSITION sub_choice = inputPlayMenu();
+			if (sub_choice.x == 1) {
+				// ve lai menu
+			} else if (sub_choice.y == 0) {
+				POSITION minichoice = subChoiceMenu();
+				if (minichoice.x == 1) {
+					//ve lai menu
+				} else if (minichoice.y == 0) {
+					difficulty = choseDifficulty();
+					if (difficulty != -1) {
+						drawBlank(40, 11, 40, 9);
+						name = inputName();
+						gameSetup();
+						// che do choi classic
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newClassicGame(difficulty);
+						textColorWithBackground(CYAN, WHITE);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
+						gameOverSign();
+						Sleep(2000);
+					}
+				} else {
+					gameSetup();
+					int idx = loadSaveClassicPlayer(classic_data, classic_player);
+					if (idx != -1) {
+						loadClassicDataIntoGame(classic_data[idx]);
+						// che do choi classic
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newClassicGame(difficulty);
+						textColorWithBackground(CYAN, WHITE);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
+						gameOverSign();
+						Sleep(2000);
+					}
+				}
+
+			} else if (sub_choice.y == 1) {
+				//che do time rush
+				POSITION minichoice = subChoiceMenu();
+				if (minichoice.x == 1) {
+					//ve lai menu
+				} else if (minichoice.y == 0) {
+					difficulty = choseDifficulty();
+					if (difficulty != -1) {
+						gametime = 360;
+						drawBlank(40, 11, 40, 9);
+						name = inputName();
+						gameSetup();
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newTimeRushGame(inputTimeChoice(), difficulty);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
+						gameOverSign();
+						Sleep(2000);
+					}
+				} else {
+					gameSetup();
+					int idx = loadSaveTimeRushPlayer(timerush_data, timerush_player);
+					if (idx != -1) {
+						loadTimeRushDataIntoGame(timerush_data[idx]);
+						infoBoard(1, 5);
+						drawBoard(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH, PURPLE);
+						infoSet(1);
+						// goi game
+						newTimeRushGame(stage, difficulty);
+						drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
+						gameOverSign();
+						Sleep(2000);
+					}
+				}
+			} else {
+				//che do choi infinitie
+				POSITION minichoice = infiniteSubChoiceMenu();
+				drawBlank(1, 5, INFO_BOARD_LENGTH, INFO_BOARD_WIDTH);
+				if (minichoice.x == 1) {
+					//ve lai menu
+				} else if (minichoice.y == 0) {
+					textColorWithBackground(PURPLE, WHITE);
+					drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
+					infoSet(3);
+					gameSetup();
+					newInfiniteGame();
+					drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+					drawBlank(27, 6, 89, 19);
+					PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
+					gameOverSign();
+					Sleep(2000);
+				} else {
+					gameSetup();
+					infoSet(3);
+					textColorWithBackground(PURPLE, WHITE);
+					drawChoiceBox(1, 5, INFO_BOARD_LENGTH + 1, INFO_BOARD_WIDTH + 1);
+					int idx = loadSaveInfinitePlayer(infinite_data, infinite_player);
+					if (idx != -1) {
+						loadInfiniteDataIntoGame(infinite_data[idx]);
+						drawBlank(27, 6, 89, 19);
+						newInfiniteGame();
+						drawChoiceBox(26, 5, PLAY_SCREEN_LENGTH, PLAY_SCREEN_WIDTH + 1);
+						drawBlank(27, 6, 89, 19);
+						PlaySound(TEXT("GameOver.wav"), NULL, SND_ASYNC | SND_FILENAME);
+						gameOverSign();
+					}
+					Sleep(2000);
+				}
+
+			}
+		}
+		else if (choice.x == 1 && choice.y == 0) {
+			gameTurtorial();
+			cin.ignore();
+		}
+		else if (choice.x == 0 && choice.y == 1) {
+			aboutUs();
+			cin.ignore();
+		}
+		else {
+			saveClassicFile(classic_data, classic_player);
+			freeClassicData(classic_data, classic_player);
+			saveInfiniteFile(infinite_data, infinite_player);
+			freeInfiniteData(infinite_data, infinite_player);
+			saveTimeRushFile(timerush_data, timerush_player);
+			freeTimeRushData(timerush_data, timerush_player);
+			break;
+		}
+	}
+}
